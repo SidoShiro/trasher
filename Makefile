@@ -9,5 +9,6 @@ SRC = trasher/trasher.c
 
 all: lib
 
-lib: ${SRC}
-    ar -rcs ${LIB} trasher.o
+lib:
+        ${CC} -c {SRC} -o trasher.o
+        ar -rcs ${LIB} trasher.o
