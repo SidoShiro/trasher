@@ -17,6 +17,11 @@ Allocate, use, free easily.
 
 The trasher is very compact and small, it saved me time and ensure leak free programs in C.
 
+# How to use trasher
+
+* Copy trasher directory into your directory
+* Make the library from with the provided Makefile
+
 # Logic
 
 These files are a merged of my different implementations of trasher.
