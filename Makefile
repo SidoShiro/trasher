@@ -1,4 +1,7 @@
 # MakeFile to produce trasher lib
+# Linux
+
+CC = gcc
 LIB = trasher.a
 SRC = trasher/trasher.c
 
@@ -6,5 +9,5 @@ SRC = trasher/trasher.c
 
 all: lib
 
-lib: $(SRC) 
-    ar -rcs $LIB trasher.o
+lib: ${SRC}
+    ar -rcs ${LIB} trasher.o
