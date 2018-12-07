@@ -36,4 +36,5 @@ HARD allocation is useful for memory which will have to stay available for the p
 # TODO
 
 * Allow user to create Types of allocation
+* Tests
 
