@@ -13,7 +13,9 @@ My projects which used it :
 
 Allocate, use, free easily.
 
-> Avoid memory leaks
+> Avoid memory leaks ;)
+
+The trasher is very compact and small, it saved me time and ensure leak free programs in C.
 
 # Logic
 
