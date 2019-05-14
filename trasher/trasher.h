@@ -47,7 +47,7 @@ void *mem(size_t size);
  * @param pool_number
  * @return
  */
-void *mem_id(size_t size, size_t pool_number);
+void *mem_id(size_t size, size_t pool_id);
 
 /**
  *
