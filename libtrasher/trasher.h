@@ -5,6 +5,7 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 /* Trasher Pool Manager */
 
@@ -17,6 +18,7 @@ struct pool_manager {
 struct mem_block {
   void *data;
   struct mem_block *next;
+  size_t data_size;
 };
 
 /**
@@ -73,5 +75,13 @@ void free_name(const char *pool_name);
  * Free all pools, free the pool_manager
  */
 void free_pool_all();
+
+/**
+ * Give current pool manager status
+ * Tracked pools
+ * Number of allocations
+ * Size of pools allocations
+ */
+void pool_status();
 
 #endif /* !TRASHER_H */
