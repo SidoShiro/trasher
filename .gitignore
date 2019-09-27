@@ -1,3 +1,6 @@
 *.idea/*
 *.o
 CMakeLists.txt
+libtrasher.a
+libtrasher.so
+bin_test
