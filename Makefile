@@ -1,9 +1,9 @@
-# MakeFile to produce trasher lib
+# MakeFile to produce libtrasher lib
 # Linux
 
 CC = gcc
 LIB = libtrasher.a
-SRC = trasher/trasher.c
+SRC = libtrasher/trasher.c
 
 # -static
 CFLAGS = -Wall
@@ -16,7 +16,7 @@ TEST_BIN = bin_test
 
 all: lib
 
-#	ar -rcs ${LIB} trasher.o
+#	ar -rcs ${LIB} libtrasher.o
 
 
 
@@ -26,7 +26,7 @@ lib:
 	rm trasher.o
 
 test: lib
-	cp trasher/trasher.h test/
+	cp libtrasher/trasher.h test/
 	$(CC) $(CFLAGS) ${TEST_SRC} -o ${TEST_BIN} $(LDFLAGS)
 	./${TEST_BIN}
 
