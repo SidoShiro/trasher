@@ -22,24 +22,23 @@ The trasher is very compact and small, it saved me time and ensure leak free pro
 * Copy trasher directory into your directory
 * Make the library from with the provided Makefile
 
-# Logic
+# Logic - Concept
 
-These files are a merged of my different implementations of trasher.
-
-I defined two different types of allocation SOFT and HARD :
-
-* SOFT : memory which is not supposed to stay in the heap for a long time
-* HARD : memory which has to stay allocated until the end
-
-The trasher will wrap the malloc function.
-
-This design is useful for Shells, SOFT is used to build AST, do all execution and shell allocation for a command.
-At the end of the execution of the command all of the memory allocated for this specified command is free.
-
-HARD allocation is useful for memory which will have to stay available for the program during a long time, sometimes until the end of the execution. In a case of shell, it will be environment variables and other stuff.
+* Auto-create pools to store requested memory allocated blocks
+* Multiple pools
+* Allow create blocks in a specific pool:
+  * Using an id
+  * Using a string (char*) : a tag
+* Free all pools
+* Free a specific pool (by id or by tag)
+* Unspecified tag when pool is created, result to a NULL for the pool tag
 
 # TODO
 
 * Allow user to create Types of allocation
+* Rename pools
+* Check Pools
+* Gets meta-data of pools
 * Tests
+* Performances
 
