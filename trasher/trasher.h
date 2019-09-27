@@ -4,6 +4,7 @@
 /* steddef and stdlib needed to use malloc & cie */
 #include <stddef.h>
 #include <stdlib.h>
+#include <string.h>
 
 /* Trasher Pool Manager */
 
@@ -18,21 +19,12 @@ struct mem_block {
   struct mem_block *next;
 };
 
-#if GLOBAL_POOL_MANAGER
-
-/**
- * Needed before using trash functions
- */
-void init_pool_manager();
-
-#else
 /**
  * Get the pool manager structure
  * @return
  */
 struct pool_manager *get_pool_manager();
 
-#endif
 
 /**
  * Takes the first pool
@@ -42,7 +34,9 @@ struct pool_manager *get_pool_manager();
 void *mem(size_t size);
 
 /**
- *
+ * Get pointer to memory of size size, from pool number pool_id
+ * If the pool_id doesn't exist, create a new pools in the pools array to match
+ * the require pool_number
  * @param size
  * @param pool_number
  * @return
@@ -50,9 +44,10 @@ void *mem(size_t size);
 void *mem_id(size_t size, size_t pool_id);
 
 /**
- *
- * @param size
- * @param pool_name
+ * Get Data, of size size, from pool tagged by pool_name
+ * If the pool_name doesn't exist, create a new pool tagged with pool_name
+ * @param size size_t size of the required block
+ * @param pool_name const char* the name of the pool name
  * @return
  */
 void *mem_name(size_t size, const char *pool_name);
@@ -62,8 +57,16 @@ void *mem_name(size_t size, const char *pool_name);
  */
 void free_pool();
 
+/**
+ * Free the pool number
+ * @param pool int pool id
+ */
 void free_id(int pool);
 
+/**
+ * Free pool tagged by pool_name
+ * @param pool_name const char* name of the pool
+ */
 void free_name(const char *pool_name);
 
 /**
