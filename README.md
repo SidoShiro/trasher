@@ -41,4 +41,4 @@ The trasher is very compact and small, it saved me time and ensure leak free pro
 * Gets meta-data of pools
 * Tests
 * Performances
-
+* free correctly names tags
