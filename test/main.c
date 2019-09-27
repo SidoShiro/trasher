@@ -22,12 +22,29 @@ int main() {
   array_IDS[4] = 25;
   array_ids_2[3] = 232;
 
-  printf("%d", array_ids_2[3]);
-/* FIXME
+  printf("%d\n", array_ids_2[3]);
+
   free_id(2);
 
-  printf("array_IDS access : %d", array_IDS[4]);
-  // printf("array_ids_2 : %d", array_ids_2[3]);
-*/
+  printf("array_IDS access : %d\n", array_IDS[4]);
+  printf("array_ids_2 : %d", array_ids_2[3]); // Memcheck Valgrind shoudl notify invalid read!
+
+  // Named Pools : Tag
+  int *speed_array = mem_name(20, "cars");
+  for (int i = 0; i < 20; i++)
+    speed_array[i] = i * 4;
+
+
+  int *fuel_array = mem_name(25, "cars");
+  fuel_array[0] = 10;
+  fuel_array[1] = 20;
+
+  pool_status();
+
+
+  free_name("cars");
+
+  free_pool_all();
+
   return 0;
 }
