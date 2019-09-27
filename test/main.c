@@ -23,11 +23,11 @@ int main() {
   array_ids_2[3] = 232;
 
   printf("%d", array_ids_2[3]);
-
+/* FIXME
   free_id(2);
 
   printf("array_IDS access : %d", array_IDS[4]);
   // printf("array_ids_2 : %d", array_ids_2[3]);
-
+*/
   return 0;
 }
