@@ -9,7 +9,7 @@ My projects which used it :
 * Raytracer
 * others to add ...
 
-# Usefullness 
+# Usefulness 
 
 Allocate, use, free easily.
 
