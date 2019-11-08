@@ -39,6 +39,8 @@ int main() {
   fuel_array[0] = 10;
   fuel_array[1] = 20;
 
+  free_name("cars");
+
   pool_status();
 
 
