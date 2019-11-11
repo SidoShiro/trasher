@@ -9,8 +9,10 @@ SRC = libtrasher/trasher.c
 CFLAGS = -Wall
 LDFLAGS = -L. -I. libtrasher.a 
 
-TEST_SRC = test/main.c
-TEST_BIN = bin_test
+TEST_SRC_KO = test/test_mem_ko.c
+TEST_SRC_OK = test/test_mem_ok.c
+TEST_BIN_OK = bin_test_mem_ko
+TEST_BIN_KO = bin_test_mem_ok
 
 .PHONY: all
 
@@ -25,11 +27,16 @@ lib:
 	ar -rc ${LIB} trasher.o
 	rm trasher.o
 
-test: lib
+test_ko: lib
 	cp libtrasher/trasher.h test/
-	$(CC) $(CFLAGS) ${TEST_SRC} -o ${TEST_BIN} $(LDFLAGS)
-	./${TEST_BIN}
+	$(CC) $(CFLAGS) ${TEST_SRC_KO} -o ${TEST_BIN_KO} $(LDFLAGS)
+	./${TEST_BIN_KO}
+
+test_ok: lib
+	cp libtrasher/trasher.h test/
+	$(CC) $(CFLAGS) ${TEST_SRC_OK} -o ${TEST_BIN_OK} $(LDFLAGS)
+	./${TEST_BIN_OK}
 
 clean:
-	rm -f ${LIB} trasher.o ${TEST_BIN}
+	rm -f ${LIB} trasher.o ${TEST_BIN_KO} ${TEST_BIN_OK}
 
