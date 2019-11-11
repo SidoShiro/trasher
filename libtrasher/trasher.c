@@ -108,7 +108,8 @@ void *mem_name(size_t size, const char *pool_name) {
       pm->pools = realloc(pm->pools, sizeof(struct mem_block *) * (pool_id + 1));
       pm->names = realloc(pm->names, sizeof(char *) * (pool_id + 1));
 
-      pool_id++;
+      if (pm->pools_nb != 0)
+        pool_id++;
 
       for (size_t i = pm->pools_nb; i < pool_id; i++) {
         pm->pools[i] = NULL;
