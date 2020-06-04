@@ -11,8 +11,8 @@ LDFLAGS = -L. -I. libtrasher.a
 
 TEST_SRC_KO = test/test_mem_ko.c
 TEST_SRC_OK = test/test_mem_ok.c
-TEST_BIN_OK = bin_test_mem_ko
-TEST_BIN_KO = bin_test_mem_ok
+TEST_BIN_OK = bin_test_mem_ok
+TEST_BIN_KO = bin_test_mem_ko
 
 .PHONY: all
 
