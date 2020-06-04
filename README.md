@@ -22,6 +22,16 @@ The trasher is very compact and small, it saved me time and ensure leak free pro
 * Copy trasher directory into your directory
 * Make the library from with the provided Makefile
 
+## Tests
+
+```
+# Should run smoothly
+make test_ok
+
+# Should crash : core dumped (double free) 
+make test_ko
+```
+
 # Logic - Concept
 
 * Auto-create pools to store requested memory allocated blocks
@@ -33,12 +43,15 @@ The trasher is very compact and small, it saved me time and ensure leak free pro
 * Free a specific pool (by id or by tag)
 * Unspecified tag when pool is created, result to a NULL for the pool tag
 
+> This current version of trasher is a mashup of my from-scratch pools used during my studies, many different ways to do
+> were coded, I wanted to re-organize the ideas, into one project
+
 # TODO
 
 * Allow user to create Types of allocation
 * Rename pools
 * Check Pools
 * Gets meta-data of pools
-* Tests
 * Performances
-* free correctly names tags
+* Free correctly names tags
+
