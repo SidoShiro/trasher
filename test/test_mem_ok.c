@@ -37,8 +37,18 @@ int main() {
   display_btree(root, "\n");
 
 
+  printf("Check pool");
+  pool_status();
+
+  
+  free_name("btrees");
+
+  pool_status();
+
   printf("Free all\n");
   free_pool_all();
+
+  pool_status();
 
   printf("End Test\n");
 }
