@@ -90,10 +90,13 @@ void *mem_name(size_t size, const char *pool_name) {
   struct pool_manager *pm = get_pool_manager();
   if (pm) {
     if (pm->pools_nb == 0 && pm->pools == NULL) {
+      // If first call, init pools and names
       pm->pools = malloc(sizeof(struct mem_block *));
       pm->names = malloc(sizeof(char *));
       pm->names[0] = NULL;
     }
+
+    // Search in current pools if name match
     size_t pool_id = 0;
     for (; pool_id < pm->pools_nb; pool_id++)
       if (pm->names[pool_id] != NULL && 0 == strcmp(pool_name, pm->names[pool_id])) {
@@ -105,12 +108,13 @@ void *mem_name(size_t size, const char *pool_name) {
         return blk->data;
       }
 
+    // Let mem() use first slot, if wasn't created yet, so increment to 1
+    pool_id == 0 ? pool_id++: 0;
+
+    // No name match, create a new pool
     if (pm->pools_nb <= pool_id) {
       pm->pools = realloc(pm->pools, sizeof(struct mem_block *) * (pool_id + 1));
       pm->names = realloc(pm->names, sizeof(char *) * (pool_id + 1));
-
-      if (pm->pools_nb != 0)
-        pool_id++;
 
       for (size_t i = pm->pools_nb; i < pool_id; i++) {
         pm->pools[i] = NULL;
@@ -129,7 +133,7 @@ void *mem_name(size_t size, const char *pool_name) {
       pm->pools[pool_id]->data_size = size;
       pm->pools[pool_id]->next = NULL;
       pm->names[pool_id] = new_pool_name;
-      return pm->pools[0]->data;
+      return pm->pools[pool_id]->data;
     }
   }
   return NULL;
