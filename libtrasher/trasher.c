@@ -159,7 +159,6 @@ static void rm_list_block(struct mem_block *head) {
 void free_pool() {
   struct pool_manager *pm = get_pool_manager();
   if (pm->pools_nb >= 1 && pm->pools[0] != NULL) {
-    printf("* FREE");
     rm_list_block(pm->pools[0]);
     pm->pools[0] = NULL;
   }
@@ -181,7 +180,6 @@ void free_name(const char *pool_name) {
   size_t pool_id = 0;
   for (; pool_id < pm->pools_nb; pool_id++) {
     if (pm->names[pool_id] != NULL && 0 == strcmp(pool_name, pm->names[pool_id])) {
-      printf("DEBUG - Remove pool %d", pool_id);
       rm_list_block(pm->pools[pool_id]);
       pm->pools[pool_id] = NULL;
       return;
@@ -197,7 +195,6 @@ void free_pool_all() {
   size_t pool_id = 0;
   for (; pool_id < pm->pools_nb; pool_id++) {
     if (pm->pools[pool_id] != NULL) {
-      printf(" * FREE %zu\n", pool_id);
       rm_list_block(pm->pools[pool_id]);
       pm->pools[pool_id] = NULL;
     }
