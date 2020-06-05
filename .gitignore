@@ -1,6 +1,4 @@
-*.idea/*
 *.o
-CMakeLists.txt
 libtrasher.a
 libtrasher.so
 
@@ -10,3 +8,8 @@ bin_test_mem_ko
 bin_test_mem_ok
 bin_test_mem_simple
 test/trasher.h
+
+CMakeLists.txt
+cmake-build-debug/
+*.idea/*
+
