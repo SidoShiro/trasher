@@ -2,18 +2,15 @@
 
 Trasher is a C memory pool tool.
 
-My projects which used it :
-
-* Unix Shell Like
-* Mini Unix Shell Like (smaller and compact)
-* Raytracer
-* others to add ...
-
 # Usefulness 
 
 Allocate, use, free easily.
 
+> Allocate minimal required
+
 > Avoid memory leaks ;)
+
+> Simple cleaning
 
 The trasher is very compact and small, it saved me time and ensure leak free programs in C.
 
@@ -21,6 +18,7 @@ The trasher is very compact and small, it saved me time and ensure leak free pro
 
 * Copy trasher directory into your directory
 * Make the library from with the provided Makefile
+* Link the lib to your project
 
 ## Tests
 
