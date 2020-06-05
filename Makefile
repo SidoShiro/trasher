@@ -11,8 +11,10 @@ LDFLAGS = -L. -I. libtrasher.a
 
 TEST_SRC_KO = test/test_mem_ko.c
 TEST_SRC_OK = test/test_mem_ok.c
+TEST_SRC_SIMPLE = test/test_mem_simple.c
 TEST_BIN_OK = bin_test_mem_ok
 TEST_BIN_KO = bin_test_mem_ko
+TEST_BIN_SIMPLE = bin_test_mem_simple
 
 .PHONY: all
 
@@ -37,6 +39,11 @@ test_ok: lib
 	$(CC) $(CFLAGS) ${TEST_SRC_OK} -o ${TEST_BIN_OK} $(LDFLAGS)
 	./${TEST_BIN_OK}
 
+test_simple: lib
+	cp libtrasher/trasher.h test/
+	$(CC) $(CFLAGS) ${TEST_SRC_SIMPLE} -o ${TEST_BIN_SIMPLE} $(LDFLAGS)
+	./${TEST_BIN_SIMPLE}
+
 clean:
-	rm -f ${LIB} trasher.o ${TEST_BIN_KO} ${TEST_BIN_OK}
+	rm -f ${LIB} trasher.o ${TEST_BIN_KO} ${TEST_BIN_OK} ${TEST_BIN_SIMPLE}
 
