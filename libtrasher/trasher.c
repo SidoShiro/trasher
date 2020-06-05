@@ -17,9 +17,10 @@ static void* add_to(struct mem_block *head, struct mem_block *newBlock) {
     head = newBlock;
     return head;
   }
-  while (head->next != NULL)
-    head = head->next;
-  head->next = newBlock;
+  struct mem_block *iter_blk = head;
+  while (iter_blk->next != NULL)
+    iter_blk = iter_blk->next;
+  iter_blk->next = newBlock;
   return head;
 }
 
@@ -153,14 +154,20 @@ static void rm_list_block(struct mem_block *head) {
 
 void free_pool() {
   struct pool_manager *pm = get_pool_manager();
-  if (pm->pools_nb >= 1 && pm->pools[0] != NULL)
+  if (pm->pools_nb >= 1 && pm->pools[0] != NULL) {
+    printf("* FREE");
     rm_list_block(pm->pools[0]);
+    pm->pools[0] = NULL;
+  }
+
 }
 
 void free_id(int pool) {
   struct pool_manager *pm = get_pool_manager();
-  if (pm->pools_nb >= pool && pm->pools[pool] != NULL)
+  if (pm->pools_nb >= pool && pm->pools[pool] != NULL) {
     rm_list_block(pm->pools[pool]);
+    pm->pools[pool] = NULL;
+  }
 }
 
 void free_name(const char *pool_name) {
@@ -168,18 +175,40 @@ void free_name(const char *pool_name) {
     return;
   struct pool_manager *pm = get_pool_manager();
   size_t pool_id = 0;
-  for (; pool_id < pm->pools_nb; pool_id++)
+  for (; pool_id < pm->pools_nb; pool_id++) {
     if (pm->names[pool_id] != NULL && 0 == strcmp(pool_name, pm->names[pool_id])) {
       printf("DEBUG - Remove pool %d", pool_id);
       rm_list_block(pm->pools[pool_id]);
+      pm->pools[pool_id] = NULL;
       return;
     }
+  }
 }
+
+// TODO function delete_name_from_manager()
+// To delete the pool with the name/id in the manager
 
 void free_pool_all() {
   struct pool_manager *pm = get_pool_manager();
-  if (pm->pools_nb >= 1 && pm->pools[0] != NULL)
-    rm_list_block(pm->pools[0]);
+  size_t pool_id = 0;
+  for (; pool_id < pm->pools_nb; pool_id++) {
+    if (pm->pools[pool_id] != NULL) {
+      printf(" * FREE %zu\n", pool_id);
+      rm_list_block(pm->pools[pool_id]);
+      pm->pools[pool_id] = NULL;
+    }
+  }
+  // TODO Free manager data
+  for (size_t i = 0; i < pm->pools_nb; i++) {
+    free(pm->names[i]);
+  }
+  free(pm->names);
+  pm->names = NULL;
+  free(pm->pools);
+  pm->pools = NULL;
+  pm->pools_nb = 0;
+  free(pm);
+  pm = NULL;
 }
 
 void pool_status() {
@@ -188,18 +217,20 @@ void pool_status() {
     printf("Pool Manager is NULL - cannot give status!");
     return;
   }
-  printf("\n--- Pools Manager ---\n%4zu : Pools\n", pm->pools_nb);
+  printf("\n--- Pools Manager ---\n Pools : %4zu\n", pm->pools_nb);
+  if (!pm->pools)
+    return;
   for (size_t i = 0; i < pm->pools_nb; i++) {
     if (pm->pools[i] == NULL) {
-      printf("[%zu] : [%s] : NULL\n", i, pm->names[i] != NULL ? pm->names[i] : "NULL");
+      printf("[%2zu] : [%s] : NULL\n", i, pm->names && pm->names[i] != NULL ? pm->names[i] : "NULL");
     } else {
-      printf("[%zu] : [%s] : ", i, pm->names[i] != NULL ? pm->names[i] : "NULL");
+      printf("[%2zu] : [%s] : ", i, pm->names && pm->names[i] != NULL ? pm->names[i] : "NULL");
       struct mem_block *h = pm->pools[i];
       while (h) {
         printf("%zu", h->data_size);
         h = h->next;
         if (h)
-          printf(" -> ");
+          printf(" > ");
       }
       printf("\n");
     }
