@@ -18,30 +18,31 @@ TEST_BIN_SIMPLE = bin_test_mem_simple
 
 .PHONY: all
 
+debug: CFLAGS += -g
+debug: all
+
 all: lib
 
 #	ar -rcs ${LIB} libtrasher.o
 
-
-
 lib:
-	${CC} -c ${SRC} -o trasher.o
+	${CC} -c ${SRC} ${CFLAGS} -o trasher.o
 	ar -rc ${LIB} trasher.o
 	rm trasher.o
 
-test_ko: lib
+test_ko: debug
 	cp libtrasher/trasher.h test/
-	$(CC) $(CFLAGS) ${TEST_SRC_KO} -o ${TEST_BIN_KO} $(LDFLAGS)
+	$(CC) $(CFLAGS) -g ${TEST_SRC_KO} -o ${TEST_BIN_KO} $(LDFLAGS)
 	./${TEST_BIN_KO}
 
-test_ok: lib
+test_ok: debug
 	cp libtrasher/trasher.h test/
-	$(CC) $(CFLAGS) ${TEST_SRC_OK} -o ${TEST_BIN_OK} $(LDFLAGS)
+	$(CC) $(CFLAGS) -g ${TEST_SRC_OK} -o ${TEST_BIN_OK} $(LDFLAGS)
 	./${TEST_BIN_OK}
 
-test_simple: lib
+test_simple: debug
 	cp libtrasher/trasher.h test/
-	$(CC) $(CFLAGS) ${TEST_SRC_SIMPLE} -o ${TEST_BIN_SIMPLE} $(LDFLAGS)
+	$(CC) $(CFLAGS) -g ${TEST_SRC_SIMPLE} -o ${TEST_BIN_SIMPLE} $(LDFLAGS)
 	./${TEST_BIN_SIMPLE}
 
 clean:
