@@ -62,10 +62,11 @@ void *mem_id(size_t size, size_t pool_id) {
       pm->pools = realloc(pm->pools, sizeof(struct mem_block *) * (pool_id + 1));
       pm->names = realloc(pm->names, sizeof(char *) * (pool_id + 1));
 
-      for (size_t i = pm->pools_nb; i < pool_id; i++) {
+      for (size_t i = pm->pools_nb; i <= pool_id; i++) {
         pm->pools[i] = NULL;
         pm->names[i] = NULL;
       }
+
       pm->pools_nb = pool_id + 1;
       pm->pools[pool_id] = malloc(sizeof(struct mem_block));
       pm->pools[pool_id]->data = malloc(size);
@@ -116,7 +117,7 @@ void *mem_name(size_t size, const char *pool_name) {
       pm->pools = realloc(pm->pools, sizeof(struct mem_block *) * (pool_id + 1));
       pm->names = realloc(pm->names, sizeof(char *) * (pool_id + 1));
 
-      for (size_t i = pm->pools_nb; i < pool_id; i++) {
+      for (size_t i = pm->pools_nb; i <= pool_id; i++) {
         pm->pools[i] = NULL;
         pm->names[i] = NULL;
       }
