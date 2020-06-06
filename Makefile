@@ -7,7 +7,7 @@ SRC = libtrasher/trasher.c
 
 # -static
 CFLAGS = -Wall
-LDFLAGS = -L. -I. libtrasher.a 
+LDFLAGS = -L. -ltrasher
 
 TEST_SRC_KO = test/test_mem_ko.c
 TEST_SRC_OK = test/test_mem_ok.c
@@ -29,6 +29,8 @@ lib:
 	${CC} -c ${SRC} ${CFLAGS} -o trasher.o
 	ar -rc ${LIB} trasher.o
 	rm trasher.o
+
+test: test_ok test_simple
 
 test_ko: debug
 	cp libtrasher/trasher.h test/
