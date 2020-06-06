@@ -18,11 +18,27 @@ The trasher is very compact and small, it saved me time and ensure leak free pro
 
 * Copy trasher directory into your directory
 * Make the library from with the provided Makefile
+* Ensure the access to **trasher.h** for your code
 * Link the lib to your project
+
+```sh:
+# If the library is in the standard lib folder of your system:
+
+gcc  test.c -ltrasher
+
+# OR (specify path):
+
+gcc  test.c -L/path/to/lib/lib -ltrasher
+
+# OR (local path):
+
+gcc test.c -L. -ltrasher
+```
+
 
 ## Tests
 
-```
+```sh
 # Should run smoothly
 make test_ok
 
@@ -44,12 +60,14 @@ make test_ko
 > This current version of trasher is a mashup of my from-scratch pools used during my studies, many different ways to do
 > were coded, I wanted to re-organize the ideas, into one project
 
-# TODO
+## Lacks
 
-* Allow user to create Types of allocation
+* No realloc
+* Needs a specific usage of pools in a program
+
+### TODO
+
+* /!\ Allow user to create Types of allocation
 * Rename pools
-* Check Pools
-* Gets meta-data of pools
 * Performances
-* Free correctly names tags
 
