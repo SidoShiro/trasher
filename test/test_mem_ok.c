@@ -24,6 +24,21 @@ void display_btree(struct btree *root, char* suffix) {
 }
 
 int main() {
+
+  mem_id(50, 1);
+
+  printf("Test mem stupid usage\n");
+
+  // You should get the result of mem to do something with it
+  mem(10);
+  mem(20);
+  mem(30);
+  mem_name(50, "Check_Mate");
+
+  mem_id(100, 1);
+
+  pool_status();
+
   printf("Test mem normal usage\n");
 
   printf("Small Tree\n");
@@ -36,19 +51,27 @@ int main() {
   printf("Print B Tree\n");
   display_btree(root, "\n");
 
-
-  printf("Check pool");
+  printf("Check pool\n");
   pool_status();
 
-  
+  printf("Free btrees pool\n");
   free_name("btrees");
+  pool_status();
+  printf("Create new pools, id=10, then with name=arguments\n");
 
+  mem_id(16, 10);
+  mem_name(64, "arguments");
+
+  printf("Re-use free pool 'btrees', with a new tree:\n");
+  struct btree *other_root = init_btree(5, init_btree(2, NULL, NULL), init_btree(6, NULL, NULL));
+  display_btree(other_root, "\n");
+
+  printf("Check pool\n");
   pool_status();
 
   printf("Free all\n");
-  free_pool_all();
 
-  pool_status();
+  free_pool_all(); // Should close all pool functions for memory safety
 
   printf("End Test\n");
 }
