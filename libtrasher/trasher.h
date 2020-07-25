@@ -61,9 +61,9 @@ void free_pool();
 
 /**
  * Free the pool number, remove pool tag (in names if not NULL)
- * @param pool int pool id
+ * @param pool size_t pool id
  */
-void free_id(int pool);
+void free_id(size_t pool);
 
 /**
  * Free pool tagged by pool_name, remove pool_name tag

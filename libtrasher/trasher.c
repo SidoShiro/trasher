@@ -184,7 +184,7 @@ void free_pool() {
 
 }
 
-void free_id(int pool) {
+void free_id(size_t pool) {
   struct pool_manager *pm = get_pool_manager();
   if (pm->pools_nb >= pool && pm->pools[pool] != NULL) {
     rm_list_block(pm->pools[pool]);
