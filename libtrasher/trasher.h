@@ -60,13 +60,13 @@ void *mem_name(size_t size, const char *pool_name);
 void free_pool();
 
 /**
- * Free the pool number
+ * Free the pool number, remove pool tag (in names if not NULL)
  * @param pool int pool id
  */
 void free_id(int pool);
 
 /**
- * Free pool tagged by pool_name
+ * Free pool tagged by pool_name, remove pool_name tag
  * @param pool_name const char* name of the pool
  */
 void free_name(const char *pool_name);
