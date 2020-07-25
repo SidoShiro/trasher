@@ -99,7 +99,7 @@ void *mem_name(size_t size, const char *pool_name) {
 
     // Search in current pools if name match
     size_t pool_id = 0;
-    for (; pool_id < pm->pools_nb; pool_id++)
+    for (; pool_id < pm->pools_nb; pool_id++) {
       if (pm->names[pool_id] != NULL && 0 == strcmp(pool_name, pm->names[pool_id])) {
         struct mem_block *blk = malloc(sizeof(struct mem_block));
         blk->data = malloc(size);
@@ -108,6 +108,24 @@ void *mem_name(size_t size, const char *pool_name) {
         pm->pools[pool_id] = add_to(pm->pools[pool_id], blk);
         return blk->data;
       }
+      // Take place of a freed pool if found one
+      if (pm->names[pool_id] == NULL && pm->pools[pool_id] == NULL) {
+        // Set Name
+        size_t len = strlen(pool_name);
+        char *new_pool_name = malloc(sizeof(char) * (len + 1));
+        strcpy(new_pool_name, pool_name);
+        new_pool_name[len] = '\0';
+
+        pm->names[pool_id] = new_pool_name;
+
+        struct mem_block *blk = malloc(sizeof(struct mem_block));
+        blk->data = malloc(size);
+        blk->data_size = size;
+        blk->next = NULL;
+        pm->pools[pool_id] = add_to(pm->pools[pool_id], blk);
+        return blk->data;
+      }
+    }
 
     // Let mem() use first slot, if wasn't created yet, so increment to 1
     pool_id == 0 ? pool_id++: 0;
@@ -171,6 +189,8 @@ void free_id(int pool) {
   if (pm->pools_nb >= pool && pm->pools[pool] != NULL) {
     rm_list_block(pm->pools[pool]);
     pm->pools[pool] = NULL;
+    // Reset also pool name
+    pm->names[pool] = NULL;
   }
 }
 
@@ -183,13 +203,11 @@ void free_name(const char *pool_name) {
     if (pm->names[pool_id] != NULL && 0 == strcmp(pool_name, pm->names[pool_id])) {
       rm_list_block(pm->pools[pool_id]);
       pm->pools[pool_id] = NULL;
+      pm->names[pool_id] = NULL;
       return;
     }
   }
 }
-
-// TODO function delete_name_from_manager()
-// To delete the pool with the name/id in the manager
 
 void free_pool_all() {
   struct pool_manager *pm = get_pool_manager();
@@ -200,7 +218,6 @@ void free_pool_all() {
       pm->pools[pool_id] = NULL;
     }
   }
-  // TODO Free manager data
   for (size_t i = 0; i < pm->pools_nb; i++) {
     free(pm->names[i]);
   }
@@ -240,22 +257,3 @@ void pool_status() {
   printf("---               ---\n");
 }
 
-/* OLD FIXME SOFT HARD version
-void rm(enum mem_type type) {
-  switch (type) {
-    case SOFT:
-      rm_list_block(get_pool()->soft);
-      get_pool()->soft = NULL;
-      break;
-    case HARD:
-      rm_list_block(get_pool()->hard);
-      get_pool()->hard = NULL;
-      break;
-    case ALL:
-      rm_list_block(get_pool()->soft);
-      rm_list_block(get_pool()->hard);
-      free(get_pool());
-      manager = NULL;
-  }
-}
- */
