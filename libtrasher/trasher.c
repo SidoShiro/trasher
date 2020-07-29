@@ -202,6 +202,7 @@ void free_name(const char *pool_name) {
   for (; pool_id < pm->pools_nb; pool_id++) {
     if (pm->names[pool_id] != NULL && 0 == strcmp(pool_name, pm->names[pool_id])) {
       rm_list_block(pm->pools[pool_id]);
+      free(pm->names[pool_id]);
       pm->pools[pool_id] = NULL;
       pm->names[pool_id] = NULL;
       return;

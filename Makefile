@@ -6,8 +6,9 @@ LIB = libtrasher.a
 SRC = libtrasher/trasher.c
 
 # -static
-CFLAGS = -Wall
+CFLAGS = -Wall -Wextra
 LDFLAGS = -L. -ltrasher
+CDEBUGFLAGS = -Wall -Wextra -g -fsanitize=address
 
 TEST_SRC_KO = test/test_mem_ko.c
 TEST_SRC_OK = test/test_mem_ok.c
@@ -20,36 +21,41 @@ TEST_BIN_MEM = bin_test_mem_valgrind
 
 .PHONY: all
 
-debug: CFLAGS += -g
-debug: all
 
 all: lib
 
 #	ar -rcs ${LIB} libtrasher.o
 
-lib:
+lib: clean
 	${CC} -c ${SRC} ${CFLAGS} -o trasher.o
 	ar -rc ${LIB} trasher.o
 	rm trasher.o
 
-test: test_ok test_simple test_memcheck_ok
 
-test_ko: debug
+lib_debug: clean 
+	${CC} -c ${SRC} ${CDEBUGFLAGS} -o trasher.o
+	ar -rc ${LIB} trasher.o
+	rm trasher.o
+
+
+test: lib_debug test_ok test_simple test_memcheck_ok
+
+test_ko:
 	cp libtrasher/trasher.h test/
-	$(CC) $(CFLAGS) -g ${TEST_SRC_KO} -o ${TEST_BIN_KO} $(LDFLAGS)
+	$(CC) $(CDEBUGFLAGS) -g ${TEST_SRC_KO} -o ${TEST_BIN_KO} $(LDFLAGS)
 	./${TEST_BIN_KO}
 
-test_ok: debug
+test_ok:
 	cp libtrasher/trasher.h test/
-	$(CC) $(CFLAGS) -g ${TEST_SRC_OK} -o ${TEST_BIN_OK} $(LDFLAGS)
+	$(CC) $(CDEBUGFLAGS) -g ${TEST_SRC_OK} -o ${TEST_BIN_OK} $(LDFLAGS)
 	./${TEST_BIN_OK}
 
-test_simple: debug
+test_simple:
 	cp libtrasher/trasher.h test/
-	$(CC) $(CFLAGS) -g ${TEST_SRC_SIMPLE} -o ${TEST_BIN_SIMPLE} $(LDFLAGS)
+	$(CC) $(CDEBUGFLAGS) -g ${TEST_SRC_SIMPLE} -o ${TEST_BIN_SIMPLE} $(LDFLAGS)
 	./${TEST_BIN_SIMPLE}
 
-test_memcheck_ok: debug
+test_memcheck_ok: lib
 	cp libtrasher/trasher.h test/
 	$(CC) $(CFLAGS) -g ${TEST_SRC_MEM} -o ${TEST_BIN_MEM} $(LDFLAGS)
 	valgrind --track-origins=yes ./${TEST_BIN_MEM}
