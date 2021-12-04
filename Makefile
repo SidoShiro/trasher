@@ -8,7 +8,8 @@ SRC = libtrasher/trasher.c
 # -static
 CFLAGS = -Wall -Wextra
 LDFLAGS = -L. -ltrasher -lcunit
-CDEBUGFLAGS = -Wall -Wextra -g -fsanitize=address
+CDEBUGFLAGS = -Wall -Wextra -g
+CDEBUGFLAGSFSANITIZE = -Wall -Wextra -g -fsanitize=address
 
 TEST_SRC_KO = test/test_mem_ko.c
 TEST_SRC_OK = test/test_mem_ok.c
@@ -35,9 +36,14 @@ lib: clean
 	ar -rc ${LIB} trasher.o
 	rm trasher.o
 
-
 lib_debug: clean 
 	${CC} -c ${SRC} ${CDEBUGFLAGS} -o trasher.o
+	ar -rc ${LIB} trasher.o
+	rm trasher.o
+
+
+lib_debug_fsanitize: clean 
+	${CC} -c ${SRC} ${CDEBUGFLAGSFSANITIZE} -o trasher.o
 	ar -rc ${LIB} trasher.o
 	rm trasher.o
 
@@ -64,12 +70,12 @@ test_mix_pools_names_ids: lib_debug
 	$(CC) $(CDEBUGFLAGS) -g ${TEST_SRC_MIX} -o ${TEST_BIN_MIX} $(LDFLAGS)
 	./${TEST_BIN_MIX}
 
-test_memcheck_ok: lib_debug
+test_memcheck_ok: lib_debug_fsanitize
 	cp libtrasher/trasher.h test/
 	$(CC) $(CFLAGS) -g ${TEST_SRC_MEM} -o ${TEST_BIN_MEM} $(LDFLAGS)
 	valgrind --track-origins=yes ./${TEST_BIN_MEM}
 
-test_unit: lib
+test_unit: lib_debug
 	cp libtrasher/trasher.h test/
 	$(CC) $(CFLAGS) -g $(TEST_SRC_UNIT) -o $(TEST_BIN_UNIT) $(LDFLAGS)
 	./$(TEST_BIN_UNIT)
