@@ -42,27 +42,27 @@ lib_debug: clean
 
 test: lib_debug test_ok test_simple test_mix_pools_names_ids test_memcheck_ok
 
-test_ko:
+test_ko: lib_debug
 	cp libtrasher/trasher.h test/
 	$(CC) $(CDEBUGFLAGS) -g ${TEST_SRC_KO} -o ${TEST_BIN_KO} $(LDFLAGS)
 	./${TEST_BIN_KO}
 
-test_ok:
+test_ok: lib_debug
 	cp libtrasher/trasher.h test/
 	$(CC) $(CDEBUGFLAGS) -g ${TEST_SRC_OK} -o ${TEST_BIN_OK} $(LDFLAGS)
 	./${TEST_BIN_OK}
 
-test_simple:
+test_simple: lib_debug
 	cp libtrasher/trasher.h test/
 	$(CC) $(CDEBUGFLAGS) -g ${TEST_SRC_SIMPLE} -o ${TEST_BIN_SIMPLE} $(LDFLAGS)
 	./${TEST_BIN_SIMPLE}
 
-test_mix_pools_names_ids:
+test_mix_pools_names_ids: lib_debug
 	cp libtrasher/trasher.h test/
 	$(CC) $(CDEBUGFLAGS) -g ${TEST_SRC_MIX} -o ${TEST_BIN_MIX} $(LDFLAGS)
 	./${TEST_BIN_MIX}
 
-test_memcheck_ok: lib
+test_memcheck_ok: lib_debug
 	cp libtrasher/trasher.h test/
 	$(CC) $(CFLAGS) -g ${TEST_SRC_MEM} -o ${TEST_BIN_MEM} $(LDFLAGS)
 	valgrind --track-origins=yes ./${TEST_BIN_MEM}
