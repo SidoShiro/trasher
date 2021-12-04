@@ -1,13 +1,17 @@
 /* Trasher Pool */
 #include "trasher.h"
 
-struct pool_manager *get_pool_manager() {
+struct pool_manager *get_pool_manager(char reset) {
   static struct pool_manager *manager = NULL;
   if (!manager) {
     manager = malloc(sizeof(struct pool_manager));
     manager->pools_nb = 0;
     manager->pools = NULL;
     manager->names = NULL;
+  }
+  if (reset) {
+    // Call in a free all function
+    manager = NULL;
   }
   return manager;
 }
@@ -26,7 +30,7 @@ static void* add_to(struct mem_block *head, struct mem_block *newBlock) {
 
 void *mem(size_t size) {
   // Go on first pool (default mem)
-  struct pool_manager *pm = get_pool_manager();
+  struct pool_manager *pm = get_pool_manager(0);
   if (pm) {
     if (pm->pools_nb == 0 && pm->pools == NULL) {
       pm->pools = malloc(sizeof(struct mem_block *));
@@ -51,7 +55,7 @@ void *mem(size_t size) {
 }
 
 void *mem_id(size_t size, size_t pool_id) {
-  struct pool_manager *pm = get_pool_manager();
+  struct pool_manager *pm = get_pool_manager(0);
   if (pm) {
     if (pm->pools_nb == 0 && pm->pools == NULL) {
       pm->pools = malloc(sizeof(struct mem_block *));
@@ -88,7 +92,7 @@ void *mem_id(size_t size, size_t pool_id) {
 void *mem_name(size_t size, const char *pool_name) {
   if (!pool_name)
     return NULL;
-  struct pool_manager *pm = get_pool_manager();
+  struct pool_manager *pm = get_pool_manager(0);
   if (pm) {
     if (pm->pools_nb == 0 && pm->pools == NULL) {
       // If first call, init pools and names
@@ -176,7 +180,7 @@ static void rm_list_block(struct mem_block *head) {
 }
 
 void free_pool() {
-  struct pool_manager *pm = get_pool_manager();
+  struct pool_manager *pm = get_pool_manager(0);
   if (pm->pools_nb >= 1 && pm->pools[0] != NULL) {
     rm_list_block(pm->pools[0]);
     pm->pools[0] = NULL;
@@ -185,7 +189,7 @@ void free_pool() {
 }
 
 void free_id(size_t pool) {
-  struct pool_manager *pm = get_pool_manager();
+  struct pool_manager *pm = get_pool_manager(0);
   if (pm->pools_nb >= pool && pm->pools[pool] != NULL) {
     rm_list_block(pm->pools[pool]);
     pm->pools[pool] = NULL;
@@ -197,7 +201,7 @@ void free_id(size_t pool) {
 void free_name(const char *pool_name) {
   if (!pool_name)
     return;
-  struct pool_manager *pm = get_pool_manager();
+  struct pool_manager *pm = get_pool_manager(0);
   size_t pool_id = 0;
   for (; pool_id < pm->pools_nb; pool_id++) {
     if (pm->names[pool_id] != NULL && 0 == strcmp(pool_name, pm->names[pool_id])) {
@@ -211,7 +215,7 @@ void free_name(const char *pool_name) {
 }
 
 void free_pool_all() {
-  struct pool_manager *pm = get_pool_manager();
+  struct pool_manager *pm = get_pool_manager(0);
   size_t pool_id = 0;
   for (; pool_id < pm->pools_nb; pool_id++) {
     if (pm->pools[pool_id] != NULL) {
@@ -228,11 +232,12 @@ void free_pool_all() {
   pm->pools = NULL;
   pm->pools_nb = 0;
   free(pm);
+  get_pool_manager(1);
   pm = NULL;
 }
 
 void pool_status() {
-  struct pool_manager *pm = get_pool_manager();
+  struct pool_manager *pm = get_pool_manager(0);
   if (pm == NULL) {
     printf("Pool Manager is NULL - cannot give status!");
     return;
@@ -258,6 +263,10 @@ void pool_status() {
   printf("---               ---\n");
 }
 
-char *pool_give_name_from_id(int id) {
+char *pool_give_name_from_id(size_t id) {
+  struct pool_manager *pm = get_pool_manager(0);
+  if (pm->pools_nb > id && pm->names) {
+    return pm->names[id];
+  }
   return NULL;
 }

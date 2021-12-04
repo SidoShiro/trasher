@@ -25,7 +25,7 @@ struct mem_block {
  * Get the pool manager structure
  * @return
  */
-struct pool_manager *get_pool_manager();
+struct pool_manager *get_pool_manager(char reset);
 
 
 /**
@@ -88,6 +88,6 @@ void pool_status();
  * Give id of a pool using a name
  * Return a pointer to the string in the meta-array of names
  */
-char *pool_give_name_from_id(int id);
+char *pool_give_name_from_id(size_t id);
 
 #endif /* !TRASHER_H */
