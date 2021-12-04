@@ -95,6 +95,15 @@ make test_ko
 | `next`  | struct mem_block \* | Next memory block (linked list) |
 | `data_size` | size_t | Save the size of the allocated block | 
 
+## Notes
+
+Behaviour of mixing id pools with named pools : the "merge effect"
+
+If you have a "PoolA" named pool. Add block of 128.
+Then add a block of 512 to pool id 0:
+The pool status will be:
+`[0] : ["PoolA"] 128 -> 512`
+
 ## Lacks
 
 * No realloc
