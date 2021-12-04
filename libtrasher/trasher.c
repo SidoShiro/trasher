@@ -258,3 +258,6 @@ void pool_status() {
   printf("---               ---\n");
 }
 
+char *pool_give_name_from_id(int id) {
+  return NULL;
+}

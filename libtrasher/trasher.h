@@ -84,4 +84,10 @@ void free_pool_all();
  */
 void pool_status();
 
+/**
+ * Give id of a pool using a name
+ * Return a pointer to the string in the meta-array of names
+ */
+char *pool_give_name_from_id(int id);
+
 #endif /* !TRASHER_H */

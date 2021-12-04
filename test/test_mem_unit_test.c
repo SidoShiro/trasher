@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include <CUnit/Basic.h>
 #include "trasher.h"
 
@@ -19,6 +20,15 @@ void testSimple() {
   return;
 }
 
+void testPoolGetName() {
+  mem_name(128, "Buffer");
+  char *name = pool_give_name_from_id(0);
+  CU_ASSERT(name != NULL);
+  if (name == NULL)
+    return;
+  CU_ASSERT(strcmp(name, "Buffer") == 0);
+}
+
 int main() {
 
   CU_pSuite pSuite = NULL;
@@ -35,7 +45,9 @@ int main() {
   }
 
   // Add tests to the suite
-  if ((NULL == CU_add_test(pSuite, "simple test", testSimple))) {
+  if ((NULL == CU_add_test(pSuite, "simple test", testSimple)) ||
+      (NULL == CU_add_test(pSuite, "get pool name test", testPoolGetName))
+    ) {
     CU_cleanup_registry();
     return CU_get_error();
   }
