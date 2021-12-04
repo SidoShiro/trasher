@@ -81,5 +81,5 @@ test_unit: lib_debug
 	./$(TEST_BIN_UNIT)
 
 clean:
-	rm -f ${LIB} trasher.o ${TEST_BIN_KO} ${TEST_BIN_OK} ${TEST_BIN_SIMPLE}
+	rm -f ${LIB} trasher.o ${TEST_BIN_KO} ${TEST_BIN_OK} ${TEST_BIN_SIMPLE} ${TEST_BIN_UNIT} ${TEST_BIN_MIX}
 
