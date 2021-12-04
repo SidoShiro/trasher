@@ -69,7 +69,7 @@ test_memcheck_ok: lib_debug
 	$(CC) $(CFLAGS) -g ${TEST_SRC_MEM} -o ${TEST_BIN_MEM} $(LDFLAGS)
 	valgrind --track-origins=yes ./${TEST_BIN_MEM}
 
-test_unit: lib_debug
+test_unit: lib
 	cp libtrasher/trasher.h test/
 	$(CC) $(CFLAGS) -g $(TEST_SRC_UNIT) -o $(TEST_BIN_UNIT) $(LDFLAGS)
 	./$(TEST_BIN_UNIT)
