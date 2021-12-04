@@ -10,23 +10,55 @@ int init_unit_test_suite() {
 }
 
 int clean_suite() {
+  free_pool_all();
   // Close stuff opened in init_unit_test_suite
   return 0;
 }
 
-void testSimple() {
-  CU_ASSERT(2 == 2);
-  CU_ASSERT(2 == 3);
-  return;
+void testFreePoolsWhenEmpty() {
+  pool_status();
+  free_pool_all();
+  pool_status();
+  free_pool_all();
+}
+
+void testPoolGetNameTooHighValue() {
+  free_pool_all();
+  mem_name(128, "Buffer");
+  pool_status();
+  char *n = pool_give_name_from_id(10);
+  CU_ASSERT(n == NULL);
+  char *n2 = pool_give_name_from_id(2);
+  CU_ASSERT(n2 == NULL);
+  char *n3 = pool_give_name_from_id(1);
+  CU_ASSERT(n3 == NULL);
 }
 
 void testPoolGetName() {
+  free_pool_all();
   mem_name(128, "Buffer");
-  char *name = pool_give_name_from_id(0);
+  pool_status();
+  char *name = pool_give_name_from_id(1);
   CU_ASSERT(name != NULL);
   if (name == NULL)
     return;
   CU_ASSERT(strcmp(name, "Buffer") == 0);
+  mem_name(512, "firefox");
+  mem_name(128, "Dart");
+  mem_name(128, "Xenon");
+  pool_status();
+  char *n3 = pool_give_name_from_id(3);
+  if (n3 == NULL) {
+    CU_ASSERT(n3 != NULL);
+    return;
+  }
+  CU_ASSERT(strcmp(n3, "Dart") == 0);
+  char *n4 = pool_give_name_from_id(4);
+  if (n4 == NULL) {
+    CU_ASSERT(n4 != NULL);
+    return;
+  }
+  CU_ASSERT(strcmp(n4, "Xenon") == 0);
 }
 
 int main() {
@@ -45,8 +77,9 @@ int main() {
   }
 
   // Add tests to the suite
-  if ((NULL == CU_add_test(pSuite, "simple test", testSimple)) ||
-      (NULL == CU_add_test(pSuite, "get pool name test", testPoolGetName))
+  if ((NULL == CU_add_test(pSuite, "free pools when empty", testFreePoolsWhenEmpty)) ||
+      (NULL == CU_add_test(pSuite, "get pool name test", testPoolGetName)) ||
+      (NULL == CU_add_test(pSuite, "get pool name other wrong value", testPoolGetNameTooHighValue))
     ) {
     CU_cleanup_registry();
     return CU_get_error();
