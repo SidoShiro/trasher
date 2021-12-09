@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <unistd.h>
 
 /* Trasher Pool Manager */
 
@@ -94,6 +95,6 @@ char *pool_give_name_from_id(size_t id);
  * Give number of blocks in a pool
  * Return the number of allocated blocks
  */
-ssize_t *pool_give_number_blocks(size_t id);
+ssize_t pool_give_number_blocks(size_t id);
 
 #endif /* !TRASHER_H */

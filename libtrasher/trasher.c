@@ -271,7 +271,7 @@ char *pool_give_name_from_id(size_t id) {
   return NULL;
 }
 
-ssize_t *pool_give_number_blocks(size_t id) {
+ssize_t pool_give_number_blocks(size_t id) {
   struct pool_manager *pm = get_pool_manager(0);
   if (pm == NULL)
     return -1;
@@ -280,7 +280,7 @@ ssize_t *pool_give_number_blocks(size_t id) {
   if (id >= pm->pools_nb)
     return -2;
   ssize_t n = 0;
-  struct mem_block *head = pm->pools_nb[id];
+  struct mem_block *head = pm->pools[id];
   if (head)
     n = 1;
   else
