@@ -59,6 +59,43 @@ void testPoolGetName() {
     return;
   }
   CU_ASSERT(strcmp(n4, "Xenon") == 0);
+  free_pool_all();
+}
+
+
+void testPoolGiveNumberBlocks() {
+  free_pool_all();
+  pool_status();
+  ssize_t n = pool_give_number_blocks(0);
+  CU_ASSERT(n == -1);
+  mem_id(16, 0);
+  pool_status();
+  n = pool_give_number_blocks(0);
+  CU_ASSERT(n == 1);
+  mem_id(16, 0);
+  n = pool_give_number_blocks(0);
+  CU_ASSERT(n == 2);
+  mem_id(20, 0);
+  mem_id(20, 0);
+  mem_id(20, 0);
+  n = pool_give_number_blocks(0);
+  CU_ASSERT(n == 5);
+  n = pool_give_number_blocks(1);
+  CU_ASSERT(n == -2);
+  mem_id(46, 10);
+  n = pool_give_number_blocks(10);
+  CU_ASSERT(n == 1);
+  mem_id(90, 11);
+  mem_id(120, 11);
+  n = pool_give_number_blocks(11);
+  CU_ASSERT(n == 2);
+  int j = 100000;
+  for (int i = 0; i != j; i++)
+    mem_id(8, 100);
+  n = pool_give_number_blocks(100);
+  CU_ASSERT(n == j);
+  // pool_status(); show 100 000 8 so useless
+  free_pool_all();
 }
 
 int main() {
@@ -69,7 +106,7 @@ int main() {
     return CU_get_error();
   }
 
-  pSuite = CU_add_suite("Unit tests", init_unit_test_suite, clean_suite);
+  pSuite = CU_add_suite("Unit tests : helpers", init_unit_test_suite, clean_suite);
 
   if (NULL == pSuite) {
     CU_cleanup_registry();
@@ -79,7 +116,8 @@ int main() {
   // Add tests to the suite
   if ((NULL == CU_add_test(pSuite, "free pools when empty", testFreePoolsWhenEmpty)) ||
       (NULL == CU_add_test(pSuite, "get pool name test", testPoolGetName)) ||
-      (NULL == CU_add_test(pSuite, "get pool name other wrong value", testPoolGetNameTooHighValue))
+      (NULL == CU_add_test(pSuite, "get pool name other wrong value", testPoolGetNameTooHighValue)) ||
+      (NULL == CU_add_test(pSuite, "give number of blocks in a pool", testPoolGiveNumberBlocks))
     ) {
     CU_cleanup_registry();
     return CU_get_error();
