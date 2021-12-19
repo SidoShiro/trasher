@@ -109,6 +109,54 @@ void testPoolGiveNumberBlocks() {
   free_pool_all();
 }
 
+void testPoolManagerInit() {
+  struct pool_manager *pm = get_pool_manager(0);
+  CU_ASSERT(pm != NULL);
+  CU_ASSERT(0 == pm->pools_nb);
+  CU_ASSERT(NULL == pm->pools);
+  CU_ASSERT(NULL == pm->names);
+}
+
+void testPoolManagerAddCheck() {
+  struct pool_manager *pm = get_pool_manager(0);
+  mem(8);
+  CU_ASSERT(1 == pm->pools_nb);
+  CU_ASSERT(NULL != pm->names);
+  CU_ASSERT(NULL != pm->pools);
+  if (pm->names != NULL)
+    CU_ASSERT(pm->names[0] == NULL);
+  if (pm->pools) {
+    struct mem_block *b = pm->pools[0];
+    CU_ASSERT(8 == b->data_size);
+    CU_ASSERT(NULL == b->next);
+  }
+  mem(32);
+  struct pool_manager *pm_2 = get_pool_manager(0);
+  CU_ASSERT(pm == pm_2);
+  
+  // pool name
+  mem_name(128, "Jojo");
+  CU_ASSERT(0 == strcmp("Jojo", pm->names[1]));
+  
+  // pool id
+  mem_id(42, 10);
+  print_pools();
+  CU_ASSERT(42 == pm->pools[10]->data_size);
+}
+
+void testPoolManagerFree() {
+  struct pool_manager *pm = get_pool_manager(0);
+  mem(28); 
+  print_pools();
+  free_pool_all();
+  void *p = malloc(sizeof(struct pool_manager));
+  struct pool_manager *pm_2 = get_pool_manager(0);
+  CU_ASSERT(pm != pm_2);
+  print_pools();
+  free(p);
+}
+
+
 int main() {
   // CU lib checks
   if (CUE_SUCCESS != CU_initialize_registry()) {
@@ -139,7 +187,10 @@ int main() {
   if ((NULL == CU_add_test(suiteFreePools, "free pools when empty", testFreePoolsWhenEmpty)) ||
       (NULL == CU_add_test(suitePoolNames, "get pool name test", testPoolGetName)) ||
       (NULL == CU_add_test(suitePoolNames, "get pool name other wrong value", testPoolGetNameTooHighValue)) ||
-      (NULL == CU_add_test(suitePoolBlocks, "give number of blocks in a pool", testPoolGiveNumberBlocks))
+      (NULL == CU_add_test(suitePoolBlocks, "give number of blocks in a pool", testPoolGiveNumberBlocks)) ||
+      (NULL == CU_add_test(suitePoolManagerCreDel, "initialization of pool manager", testPoolManagerInit)) ||
+      (NULL == CU_add_test(suitePoolManagerCreDel, "simple add and checks", testPoolManagerAddCheck)) ||
+      (NULL == CU_add_test(suitePoolManagerCreDel, "free pool manager", testPoolManagerFree))
     ) {
     CU_cleanup_registry();
     return CU_get_error();
