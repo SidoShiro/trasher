@@ -82,6 +82,11 @@ test_unit: lib_debug
 	$(CC) $(CFLAGS) -g $(TEST_SRC_UNIT) -o $(TEST_BIN_UNIT) $(LDFLAGS)
 	./$(TEST_BIN_UNIT)
 
+test_unit_verbose: lib_debug
+	cp libtrasher/trasher.h test/
+	$(CC) $(CFLAGS) -D SHOW_POOLS_STATUS -g $(TEST_SRC_UNIT) -o $(TEST_BIN_UNIT) $(LDFLAGS)
+	./$(TEST_BIN_UNIT)
+
 test_free_5x: lib_debug
 	cp libtrasher/trasher.h test/
 	$(CC) $(CFLAGS) -g $(TEST_SRC_FREE_5X) -o $(TEST_BIN_FREE_5X) $(LDFLAGS)
