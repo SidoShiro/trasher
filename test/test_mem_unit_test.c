@@ -100,7 +100,7 @@ void testPoolGiveNumberBlocks() {
   mem_id(120, 11);
   n = pool_give_number_blocks(11);
   CU_ASSERT(n == 2);
-  int j = 100000;
+  int j = 18234;
   for (int i = 0; i != j; i++)
     mem_id(8, 100);
   n = pool_give_number_blocks(100);
