@@ -99,25 +99,36 @@ void testPoolGiveNumberBlocks() {
 }
 
 int main() {
-
-  CU_pSuite pSuite = NULL;
-
+  // CU lib checks
   if (CUE_SUCCESS != CU_initialize_registry()) {
     return CU_get_error();
   }
 
-  pSuite = CU_add_suite("Unit tests : helpers", init_unit_test_suite, clean_suite);
+  // Suite for pool manager creation, deletion
+  CU_pSuite suitePoolManagerCreDel = CU_add_suite("Pool Manager", init_unit_test_suite, clean_suite);
+  // Suite for simple mem add behaviour
+  CU_pSuite suiteMemAdd = CU_add_suite("Mem add behaviours", init_unit_test_suite, clean_suite);
+  // Suite about freeing pools
+  CU_pSuite suiteFreePools = CU_add_suite("Free pools behaviours", init_unit_test_suite, clean_suite);
+  // Suite for pool names
+  CU_pSuite suitePoolNames = CU_add_suite("Pool Names", init_unit_test_suite, clean_suite);
+  // Suite for pool block numbers
+  CU_pSuite suitePoolBlocks = CU_add_suite("Pool blocks numbers", init_unit_test_suite, clean_suite);
 
-  if (NULL == pSuite) {
+  if (NULL == suitePoolManagerCreDel ||
+      NULL == suitePoolBlocks ||
+      NULL == suitePoolNames ||
+      NULL == suiteFreePools ||
+      NULL == suiteMemAdd) {
     CU_cleanup_registry();
     return CU_get_error();
   }
 
   // Add tests to the suite
-  if ((NULL == CU_add_test(pSuite, "free pools when empty", testFreePoolsWhenEmpty)) ||
-      (NULL == CU_add_test(pSuite, "get pool name test", testPoolGetName)) ||
-      (NULL == CU_add_test(pSuite, "get pool name other wrong value", testPoolGetNameTooHighValue)) ||
-      (NULL == CU_add_test(pSuite, "give number of blocks in a pool", testPoolGiveNumberBlocks))
+  if ((NULL == CU_add_test(suiteFreePools, "free pools when empty", testFreePoolsWhenEmpty)) ||
+      (NULL == CU_add_test(suitePoolNames, "get pool name test", testPoolGetName)) ||
+      (NULL == CU_add_test(suitePoolNames, "get pool name other wrong value", testPoolGetNameTooHighValue)) ||
+      (NULL == CU_add_test(suitePoolBlocks, "give number of blocks in a pool", testPoolGiveNumberBlocks))
     ) {
     CU_cleanup_registry();
     return CU_get_error();
