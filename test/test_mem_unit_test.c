@@ -15,17 +15,28 @@ int clean_suite() {
   return 0;
 }
 
+void print_pools();
+
+#ifdef SHOW_POOLS_STATUS
+void print_pools() {
+  pool_status();
+}
+#endif
+#ifndef SHOW_POOLS_STATUS
+void print_pools() {}
+#endif
+
 void testFreePoolsWhenEmpty() {
-  pool_status();
+  print_pools();
   free_pool_all();
-  pool_status();
+  print_pools();
   free_pool_all();
 }
 
 void testPoolGetNameTooHighValue() {
   free_pool_all();
   mem_name(128, "Buffer");
-  pool_status();
+  print_pools();
   char *n = pool_give_name_from_id(10);
   CU_ASSERT(n == NULL);
   char *n2 = pool_give_name_from_id(2);
@@ -37,7 +48,7 @@ void testPoolGetNameTooHighValue() {
 void testPoolGetName() {
   free_pool_all();
   mem_name(128, "Buffer");
-  pool_status();
+  print_pools();
   char *name = pool_give_name_from_id(1);
   CU_ASSERT(name != NULL);
   if (name == NULL)
@@ -46,7 +57,7 @@ void testPoolGetName() {
   mem_name(512, "firefox");
   mem_name(128, "Dart");
   mem_name(128, "Xenon");
-  pool_status();
+  print_pools();
   char *n3 = pool_give_name_from_id(3);
   if (n3 == NULL) {
     CU_ASSERT(n3 != NULL);
@@ -65,11 +76,11 @@ void testPoolGetName() {
 
 void testPoolGiveNumberBlocks() {
   free_pool_all();
-  pool_status();
+  print_pools();
   ssize_t n = pool_give_number_blocks(0);
   CU_ASSERT(n == -1);
   mem_id(16, 0);
-  pool_status();
+  print_pools();
   n = pool_give_number_blocks(0);
   CU_ASSERT(n == 1);
   mem_id(16, 0);
@@ -94,7 +105,7 @@ void testPoolGiveNumberBlocks() {
     mem_id(8, 100);
   n = pool_give_number_blocks(100);
   CU_ASSERT(n == j);
-  // pool_status(); show 100 000 8 so useless
+  // print_pools(); show 100 000 8 so useless
   free_pool_all();
 }
 
