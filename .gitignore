@@ -4,10 +4,7 @@ libtrasher.so
 
 
 bin_test
-bin_test_mem_ko
-bin_test_mem_ok
-bin_test_mem_simple
-bin_test_mem_valgrind
+bin_test*
 test/trasher.h
 
 CMakeLists.txt
