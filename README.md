@@ -14,6 +14,8 @@ Allocate, use, free easily.
 
 The trasher is very compact and small, it saved me time and ensure leak free programs in C.
 
+Allocate to specific pools, free them as easily.
+
 # How to use trasher
 
 * Copy trasher directory into your directory
@@ -39,6 +41,9 @@ gcc test.c -L. -ltrasher
 ## Tests
 
 ```sh
+# all tests
+make test
+
 # Should run smoothly
 make test_ok
 
@@ -62,7 +67,7 @@ make test_ko
 
 ## Trasher - Doc
 
-* Lib Functions
+* User Functions
 
 | Function | Desc. | Args. | Return |
 |----------|-------|-------|--------|
@@ -74,7 +79,18 @@ make test_ko
 | `free_name` | Free the pool with pool_name as name | pool_name (const char \*) : the pool name | - |
 | `free_pool_all` | Remove all pools, reset pool_manager | - | - |
 | `pool_status` | Get printed view of the pools, used mainly for debug | - | (many prints) |
+| `pool_give_number_blocks` | Give number of allocated blocks in a pool | - | - |
+| `pool_give_name_from_id` | Retrieve name of a pool from id of pool, NULL if error/not found | id (size_t) | name (char \*) |
+| `pool_give_id_from_name` | Retrieve id of a pool using the name of the pool, return -1 if not found or error | name (char \*) | id (ssize_t) |
+| `pool_rename` | Rename a pool name to a new name | char \* source_name, char \* new_name | int |
+
+
+* Dev Level Lib Functions
+
+| Function | Desc. | Args. | Return |
+|----------|-------|-------|--------|
 | `get_pool_manger` | Get the struct which manage the pools and the pools names | - | (struct pool_manager \*) | 
+| `pool_status_debug` | Get printed view of the pools, used mainly for debug, on stderr | - | (many prints) |
 
 
 * Lib data structs
@@ -100,18 +116,17 @@ make test_ko
 Behaviour of mixing id pools with named pools : the "merge effect"
 
 If you have a "PoolA" named pool. Add block of 128.
-Then add a block of 512 to pool id 0:
+Then add a block of 512 to pool id 1:
 The pool status will be:
-`[0] : ["PoolA"] 128 -> 512`
+```
+[0] : [NULL] NULL
+[1] : ["PoolA"] 128 -> 512
+```
 
-## Lacks
-
-* No realloc
-* Needs a specific usage of pools in a program
+> Pool 0 has no name, it's reserved for the mem() and free_pool() functions | and mem_id(XXX, 0)
 
 ### TODO
 
-* /!\ Allow user to create Types of allocation
-* Rename pools
+* Realloc (wrapper ?)
 * Performances
 
