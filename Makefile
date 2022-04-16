@@ -72,26 +72,32 @@ test_mix_pools_names_ids: lib_debug
 	$(CC) $(CDEBUGFLAGS) -g ${TEST_SRC_MIX} -o ${TEST_BIN_MIX} $(LDFLAGS)
 	./${TEST_BIN_MIX}
 
-test_memcheck_ok: lib_debug_fsanitize
+test_memcheck_ok_fsanitize: lib_debug_fsanitize
 	cp libtrasher/trasher.h test/
-	$(CC) $(CFLAGS) -g ${TEST_SRC_MEM} -o ${TEST_BIN_MEM} $(LDFLAGS)
-	valgrind --track-origins=yes ./${TEST_BIN_MEM}
+	$(CC) $(CDEBUGFLAGSFSANITIZE) -g ${TEST_SRC_MEM} -o ${TEST_BIN_MEM} $(LDFLAGS)
+	./${TEST_BIN_MEM}
+
+test_memcheck_ok_valgrind: lib_debug
+	cp libtrasher/trasher.h test/
+	$(CC) $(CDEBUGFLAGS) -g ${TEST_SRC_MEM} -o ${TEST_BIN_MEM} $(LDFLAGS)
+	valgrind -s --track-origins=yes ./${TEST_BIN_MEM}
+
 
 test_unit: lib_debug
 	cp libtrasher/trasher.h test/
-	$(CC) $(CFLAGS) -g $(TEST_SRC_UNIT) -o $(TEST_BIN_UNIT) $(LDFLAGS)
+	$(CC) $(CDEBUGFLAGS) -g $(TEST_SRC_UNIT) -o $(TEST_BIN_UNIT) $(LDFLAGS)
 	./$(TEST_BIN_UNIT)
 
 test_unit_verbose: lib_debug
 	cp libtrasher/trasher.h test/
-	$(CC) $(CFLAGS) -D SHOW_POOLS_STATUS -g $(TEST_SRC_UNIT) -o $(TEST_BIN_UNIT) $(LDFLAGS)
+	$(CC) $(CDEBUGFLAGS) -D SHOW_POOLS_STATUS -g $(TEST_SRC_UNIT) -o $(TEST_BIN_UNIT) $(LDFLAGS)
 	./$(TEST_BIN_UNIT)
 
 test_free_5x: lib_debug
 	cp libtrasher/trasher.h test/
-	$(CC) $(CFLAGS) -g $(TEST_SRC_FREE_5X) -o $(TEST_BIN_FREE_5X) $(LDFLAGS)
+	$(CC) $(CDEBUGFLAGS) -g $(TEST_SRC_FREE_5X) -o $(TEST_BIN_FREE_5X) $(LDFLAGS)
 	./${TEST_BIN_FREE_5X}
 
 clean:
-	rm -f ${LIB} trasher.o ${TEST_BIN_KO} ${TEST_BIN_OK} ${TEST_BIN_SIMPLE} ${TEST_BIN_UNIT} ${TEST_BIN_MIX} ${TEST_BIN_FREE_5X}
+	rm -f ${LIB} trasher.o ${TEST_BIN_KO} ${TEST_BIN_OK} ${TEST_BIN_SIMPLE} ${TEST_BIN_UNIT} ${TEST_BIN_MIX} ${TEST_BIN_FREE_5X} ${TEST_BIN_MEM}
 
