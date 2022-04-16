@@ -301,7 +301,7 @@ ssize_t pool_give_id_from_name(char *name) {
   if (name == NULL)
     return -1;
   for (size_t i = 0; i < pm->pools_nb; i++) {
-    if (strcmp(pm->names[i], name) == 0) {
+    if (pm->names[i] != NULL && strcmp(pm->names[i], name) == 0) {
       return i;
     }
   }
