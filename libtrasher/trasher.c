@@ -263,6 +263,33 @@ void pool_status() {
   printf("---               ---\n");
 }
 
+void pool_status_debug() {
+  struct pool_manager *pm = get_pool_manager(0);
+  if (pm == NULL) {
+    dprintf(2, "Pool Manager is NULL - cannot give status!");
+    return;
+  }
+  dprintf(2,"\n--- Pools Manager ---\n Pools : %4zu\n", pm->pools_nb);
+  if (!pm->pools)
+    return;
+  for (size_t i = 0; i < pm->pools_nb; i++) {
+    if (pm->pools[i] == NULL) {
+      dprintf(2, "[%2zu] : [%s] : NULL\n", i, pm->names && pm->names[i] != NULL ? pm->names[i] : "NULL");
+    } else {
+      dprintf(2, "[%2zu] : [%s] : ", i, pm->names && pm->names[i] != NULL ? pm->names[i] : "NULL");
+      struct mem_block *h = pm->pools[i];
+      while (h) {
+        dprintf(2, "%zu", h->data_size);
+        h = h->next;
+        if (h)
+          dprintf(2, " > ");
+      }
+      dprintf(2, "\n");
+    }
+  }
+  dprintf(2, "---               ---\n");
+}
+
 char *pool_give_name_from_id(size_t id) {
   struct pool_manager *pm = get_pool_manager(0);
   if (pm->pools_nb > id && pm->names) {

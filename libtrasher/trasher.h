@@ -86,6 +86,11 @@ void free_pool_all();
 void pool_status();
 
 /**
+ * Same as pool_status but on stderr
+ */
+void pool_status_debug();
+
+/**
  * Give id of a pool using a name
  * Return a pointer to the string in the meta-array of names
  */
