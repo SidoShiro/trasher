@@ -332,3 +332,18 @@ ssize_t pool_give_number_blocks(size_t id) {
   }
   return n;
 }
+
+int pool_rename(char *source_name, char *new_name) {
+  struct pool_manager *pm = get_pool_manager(0);
+  if (source_name == NULL || new_name == NULL)
+    return -1;
+  for (size_t i = 0; i < pm->pools_nb; i++) {
+    if (pm->names[i] != NULL && strcmp(pm->names[i], source_name) == 0) {
+      size_t l = strlen(new_name) + 1;
+      pm->names[i] = realloc(pm->names[i], l);
+      strcpy(pm->names[i], new_name);
+      return 1;
+    }
+  }
+  return 0;
+}

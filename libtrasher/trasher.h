@@ -109,4 +109,12 @@ ssize_t pool_give_number_blocks(size_t id);
  */
 ssize_t pool_give_id_from_name(char *name);
 
+/**
+ * Rename an existing pool (source name) with the new name
+ * @param source_name
+ * @param new_name
+ * @return 1 if done, 0 if source_name doesn't exist, -1 if error
+ */
+int pool_rename(char *source_name, char *new_name);
+
 #endif /* !TRASHER_H */

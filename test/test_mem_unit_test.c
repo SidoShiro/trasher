@@ -45,6 +45,7 @@ void testPoolGetNameTooHighValue() {
   CU_ASSERT_PTR_NULL(n3);
   char *buffer = pool_give_name_from_id(1);
   CU_ASSERT_PTR_NOT_NULL(buffer);
+  free_pool_all();
 }
 
 void testPoolGetName() {
@@ -94,6 +95,25 @@ void testPoolGetName() {
   // Xenon has 3 block of 128 bytes
   CU_ASSERT_EQUAL(pool_give_number_blocks(id_4), 3);
   free_pool_all();
+}
+
+void testPoolRename() {
+  free_pool_all();
+  mem_name(440, "JAMES");
+  CU_ASSERT_STRING_EQUAL(pool_give_name_from_id(1), "JAMES");
+  mem_name(1, "JAMES");
+  mem_name(2, "JAMES");
+  CU_ASSERT_EQUAL(pool_give_number_blocks(1), 3);
+  pool_rename("JAMES", "MIKE");
+  CU_ASSERT_STRING_EQUAL(pool_give_name_from_id(1), "MIKE");
+  CU_ASSERT_EQUAL(pool_give_number_blocks(1), 3);
+  CU_ASSERT_EQUAL(pool_rename("FELIX", "JOHN"), 0);
+  CU_ASSERT_EQUAL(pool_rename("MIKE", "JOHN"), 1);
+  CU_ASSERT_EQUAL(pool_rename(NULL, "F"), -1);
+  CU_ASSERT_EQUAL(pool_rename("G", NULL), -1);
+  CU_ASSERT_EQUAL(pool_rename("JOHN", "JN"), 1);
+  CU_ASSERT_EQUAL(pool_rename("JN", "LORENA"), 1);
+  CU_ASSERT_STRING_EQUAL(pool_give_name_from_id(1), "LORENA");
 }
 
 void testPoolNameBehaviour() {
@@ -248,6 +268,7 @@ int main() {
   // Add tests to the suite
   if ((NULL == CU_add_test(suiteFreePools, "free pools when empty", testFreePoolsWhenEmpty)) ||
       (NULL == CU_add_test(suitePoolNames, "get pool name test", testPoolGetName)) ||
+      (NULL == CU_add_test(suitePoolNames, "rename pool name test", testPoolRename)) ||
       (NULL == CU_add_test(suitePoolNames, "special pool name behaviour", testPoolNameBehaviour)) ||
       (NULL == CU_add_test(suitePoolNames, "pool name behaviour with id", testPoolNameBehaviourWithId)) ||
       (NULL == CU_add_test(suitePoolNames, "get pool name other wrong value", testPoolGetNameTooHighValue)) ||
