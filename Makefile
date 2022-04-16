@@ -80,7 +80,7 @@ test_memcheck_ok_fsanitize: lib_debug_fsanitize
 test_memcheck_ok_valgrind: lib_debug
 	cp libtrasher/trasher.h test/
 	$(CC) $(CDEBUGFLAGS) -g ${TEST_SRC_MEM} -o ${TEST_BIN_MEM} $(LDFLAGS)
-	valgrind -s --track-origins=yes ./${TEST_BIN_MEM}
+	valgrind -s --track-origins=yes --leak-check=full ./${TEST_BIN_MEM}
 
 
 test_unit: lib_debug
