@@ -38,38 +38,62 @@ void testPoolGetNameTooHighValue() {
   mem_name(128, "Buffer");
   print_pools();
   char *n = pool_give_name_from_id(10);
-  CU_ASSERT(n == NULL);
+  CU_ASSERT_PTR_NULL(n);
   char *n2 = pool_give_name_from_id(2);
-  CU_ASSERT(n2 == NULL);
-  char *n3 = pool_give_name_from_id(1);
-  CU_ASSERT(n3 == NULL);
+  CU_ASSERT_PTR_NULL(n2);
+  char *n3 = pool_give_name_from_id(0);
+  CU_ASSERT_PTR_NULL(n3);
+  char *buffer = pool_give_name_from_id(1);
+  CU_ASSERT_PTR_NOT_NULL(buffer);
 }
 
 void testPoolGetName() {
   free_pool_all();
   mem_name(128, "Buffer");
+  // First Pool is Null name
+  char *default_name_null = pool_give_name_from_id(0);
+  CU_ASSERT_PTR_NULL(default_name_null);
   print_pools();
   char *name = pool_give_name_from_id(1);
-  CU_ASSERT(name != NULL);
+  CU_ASSERT_PTR_NOT_NULL(name);
   if (name == NULL)
     return;
-  CU_ASSERT(strcmp(name, "Buffer") == 0);
+  CU_ASSERT_STRING_EQUAL(name, "Buffer");
+  // Get pool name of nonexistent pool => should return NULL
+  char *n2 = pool_give_name_from_id(2);
+  if (n2 == NULL) {
+    CU_ASSERT_PTR_NULL(n2);
+    return;
+  }
+  CU_ASSERT_STRING_EQUAL(n2, "firefox");
   mem_name(512, "firefox");
+  n2 = pool_give_name_from_id(2);
+  if (n2 == NULL) {
+    CU_ASSERT_PTR_NOT_NULL(n2);
+    return;
+  }
+  CU_ASSERT_STRING_EQUAL(n2, "firefox");
   mem_name(128, "Dart");
   mem_name(128, "Xenon");
   print_pools();
   char *n3 = pool_give_name_from_id(3);
   if (n3 == NULL) {
-    CU_ASSERT(n3 != NULL);
+    CU_ASSERT_PTR_NOT_NULL(n3);
     return;
   }
-  CU_ASSERT(strcmp(n3, "Dart") == 0);
+  CU_ASSERT_STRING_EQUAL(n3, "Dart");
   char *n4 = pool_give_name_from_id(4);
   if (n4 == NULL) {
-    CU_ASSERT(n4 != NULL);
+    CU_ASSERT_PTR_NOT_NULL(n4);
     return;
   }
-  CU_ASSERT(strcmp(n4, "Xenon") == 0);
+  CU_ASSERT_STRING_EQUAL(n4, "Xenon");
+  mem_name(128, "Xenon");
+  mem_name(128, "Xenon");
+  char *xenon = pool_give_name_from_id("Xenon");
+  size_t id_4 = pool_give_id_from_name(xenon);
+  // Xenon has 3 block of 128 bytes
+  CU_ASSERT_EQUAL(pool_give_number_blocks(id_4), 3);
   free_pool_all();
 }
 

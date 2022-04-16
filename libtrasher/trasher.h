@@ -97,4 +97,11 @@ char *pool_give_name_from_id(size_t id);
  */
 ssize_t pool_give_number_blocks(size_t id);
 
+/**
+ * Give pool id from name, if name doesn't exist in pools or error return -1
+ * @param name
+ * @return
+ */
+ssize_t pool_give_id_from_name(char *name);
+
 #endif /* !TRASHER_H */
