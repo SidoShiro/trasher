@@ -110,6 +110,17 @@ void testPoolNameBehaviour() {
   free_pool_all();
 }
 
+void testPoolNameBehaviourWithId() {
+  mem(10);
+  mem_id(10, 1);
+  mem_name(20, "X");
+  mem_name(30, "A");
+  mem_id(30, 2);
+  mem_id(8, 8);
+  mem_name(96, "B");
+  pool_status_debug();
+}
+
 void testPoolGiveNumberBlocks() {
   free_pool_all();
   print_pools();
@@ -238,6 +249,7 @@ int main() {
   if ((NULL == CU_add_test(suiteFreePools, "free pools when empty", testFreePoolsWhenEmpty)) ||
       (NULL == CU_add_test(suitePoolNames, "get pool name test", testPoolGetName)) ||
       (NULL == CU_add_test(suitePoolNames, "special pool name behaviour", testPoolNameBehaviour)) ||
+      (NULL == CU_add_test(suitePoolNames, "pool name behaviour with id", testPoolNameBehaviourWithId)) ||
       (NULL == CU_add_test(suitePoolNames, "get pool name other wrong value", testPoolGetNameTooHighValue)) ||
       (NULL == CU_add_test(suitePoolBlocks, "give number of blocks in a pool", testPoolGiveNumberBlocks)) ||
       (NULL == CU_add_test(suitePoolManagerCreDel, "initialization of pool manager", testPoolManagerInit)) ||
