@@ -102,7 +102,8 @@ void *mem_name(size_t size, const char *pool_name) {
     }
 
     // Search in current pools if name match
-    size_t pool_id = 0;
+    // Let mem() use first slot, so start at 1
+    size_t pool_id = 1;
     for (; pool_id < pm->pools_nb; pool_id++) {
       if (pm->names[pool_id] != NULL && 0 == strcmp(pool_name, pm->names[pool_id])) {
         struct mem_block *blk = malloc(sizeof(struct mem_block));
@@ -130,9 +131,6 @@ void *mem_name(size_t size, const char *pool_name) {
         return blk->data;
       }
     }
-
-    // Let mem() use first slot, if wasn't created yet, so increment to 1
-    pool_id == 0 ? pool_id++: 0;
 
     // No name match, create a new pool
     if (pm->pools_nb <= pool_id) {
