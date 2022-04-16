@@ -50,7 +50,7 @@ lib_debug_fsanitize: clean
 	rm trasher.o
 
 
-test: lib_debug test_ok test_simple test_mix_pools_names_ids test_memcheck_ok clean
+test: lib_debug test_ok test_simple test_mix_pools_names_ids test_memcheck_ok_fsanitize test_memcheck_ok_valgrind test_unit clean
 
 test_ko: lib_debug
 	cp libtrasher/trasher.h test/

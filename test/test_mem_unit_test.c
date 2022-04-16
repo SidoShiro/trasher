@@ -118,7 +118,7 @@ void testPoolNameBehaviourWithId() {
   mem_id(30, 2);
   mem_id(8, 8);
   mem_name(96, "B");
-  pool_status_debug();
+  print_pools();
 }
 
 void testPoolGiveNumberBlocks() {

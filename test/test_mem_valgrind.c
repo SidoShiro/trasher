@@ -52,6 +52,7 @@ int main() {
   pool_status();
 
   free_id(5);
+  free_id(5);
 
   free_name("HOMES");
 
