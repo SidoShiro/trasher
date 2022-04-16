@@ -192,6 +192,21 @@ void testPoolManagerFree() {
   free(p);
 }
 
+void testPoolManagerMultipleFree() {
+  mem(24);
+  mem_name(16, "GOOD");
+  mem_id(42, 42);
+  struct pool_manager *pm = get_pool_manager(0);
+  CU_ASSERT_EQUAL(pm->pools_nb, 43);
+  free_pool();
+  free_id(20);
+  mem_id(20, 20);
+  CU_ASSERT_EQUAL(pool_give_number_blocks(20), 1);
+  free_name("GOOD");
+  mem_name(32, "GOOD");
+  mem_id(64, 1);
+  CU_ASSERT_EQUAL(pool_give_id_from_name("GOOD"), 1);
+}
 
 int main() {
   // CU lib checks
@@ -227,8 +242,9 @@ int main() {
       (NULL == CU_add_test(suitePoolBlocks, "give number of blocks in a pool", testPoolGiveNumberBlocks)) ||
       (NULL == CU_add_test(suitePoolManagerCreDel, "initialization of pool manager", testPoolManagerInit)) ||
       (NULL == CU_add_test(suitePoolManagerCreDel, "simple add and checks", testPoolManagerAddCheck)) ||
-      (NULL == CU_add_test(suitePoolManagerCreDel, "free pool manager", testPoolManagerFree))
-    ) {
+      (NULL == CU_add_test(suitePoolManagerCreDel, "free pool manager", testPoolManagerFree)) ||
+      (NULL == CU_add_test(suitePoolManagerCreDel, "multiple free pool manager", testPoolManagerMultipleFree))
+      ) {
     CU_cleanup_registry();
     return CU_get_error();
   }
