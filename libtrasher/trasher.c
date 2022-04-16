@@ -275,7 +275,7 @@ ssize_t pool_give_id_from_name(char *name) {
   struct pool_manager *pm = get_pool_manager(0);
   if (name == NULL)
     return -1;
-  for (int i = 0; i < pm->pools_nb; i++) {
+  for (size_t i = 0; i < pm->pools_nb; i++) {
     if (strcmp(pm->names[i], name) == 0) {
       return i;
     }
