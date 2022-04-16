@@ -90,13 +90,25 @@ void testPoolGetName() {
   CU_ASSERT_STRING_EQUAL(n4, "Xenon");
   mem_name(128, "Xenon");
   mem_name(128, "Xenon");
-  char *xenon = pool_give_name_from_id("Xenon");
-  size_t id_4 = pool_give_id_from_name(xenon);
+  size_t id_4 = pool_give_id_from_name("Xenon");
   // Xenon has 3 block of 128 bytes
   CU_ASSERT_EQUAL(pool_give_number_blocks(id_4), 3);
   free_pool_all();
 }
 
+void testPoolNameBehaviour() {
+  free_pool_all();
+  mem_name(1, "HOMES");
+  mem_name(2, "HOMES");
+  mem_name(84, "HOMES");
+  CU_ASSERT_NOT_EQUAL(pool_give_id_from_name("HOMES"), 0);
+  // pool_status_debug();
+  CU_ASSERT_EQUAL(pool_give_id_from_name("HOMES"), 1);
+  CU_ASSERT_EQUAL(pool_give_number_blocks(0), 0);
+  CU_ASSERT_EQUAL(pool_give_number_blocks(1), 3);
+  // pool_status_debug();
+  free_pool_all();
+}
 
 void testPoolGiveNumberBlocks() {
   free_pool_all();
@@ -210,6 +222,7 @@ int main() {
   // Add tests to the suite
   if ((NULL == CU_add_test(suiteFreePools, "free pools when empty", testFreePoolsWhenEmpty)) ||
       (NULL == CU_add_test(suitePoolNames, "get pool name test", testPoolGetName)) ||
+      (NULL == CU_add_test(suitePoolNames, "special pool name behaviour", testPoolNameBehaviour)) ||
       (NULL == CU_add_test(suitePoolNames, "get pool name other wrong value", testPoolGetNameTooHighValue)) ||
       (NULL == CU_add_test(suitePoolBlocks, "give number of blocks in a pool", testPoolGiveNumberBlocks)) ||
       (NULL == CU_add_test(suitePoolManagerCreDel, "initialization of pool manager", testPoolManagerInit)) ||
