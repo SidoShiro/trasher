@@ -191,6 +191,9 @@ void free_id(size_t pool) {
   if (pm->pools_nb >= pool && pm->pools[pool] != NULL) {
     rm_list_block(pm->pools[pool]);
     pm->pools[pool] = NULL;
+    // if the id pool had also a name
+    if (pm->names[pool] != NULL)
+      free(pm->names[pool]);
     // Reset also pool name
     pm->names[pool] = NULL;
   }
