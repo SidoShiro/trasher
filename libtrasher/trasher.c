@@ -17,18 +17,6 @@ struct pool_manager *get_pool_manager(char reset) {
   return manager;
 }
 
-static void* add_to(struct mem_block *head, struct mem_block *newBlock) {
-  if (head == NULL) {
-    head = newBlock;
-    return head;
-  }
-  struct mem_block *iter_blk = head;
-  while (iter_blk->next != NULL)
-    iter_blk = iter_blk->next;
-  iter_blk->next = newBlock;
-  return head;
-}
-
 void *mem(size_t size) {
   // Go on first pool (default mem)
   struct pool_manager *pm = get_pool_manager(0);
@@ -50,8 +38,13 @@ void *mem(size_t size) {
       blk->data = malloc(size);
       blk->next = NULL;
       blk->data_size = size;
-      pm->tails[0]->next = blk;
-      pm->tails[0] = blk;
+      if (pm->pools[0] == NULL) {
+        pm->pools[0] = blk;
+        pm->tails[0] = blk;
+      } else {
+        pm->tails[0]->next = blk;
+        pm->tails[0] = blk;
+      }
       // pm->pools[0] = add_to(pm->pools[0], blk);
       return blk->data;
     }
@@ -65,15 +58,18 @@ void *mem_id(size_t size, size_t pool_id) {
     if (pm->pools_nb == 0 && pm->pools == NULL) {
       pm->pools = malloc(sizeof(struct mem_block *));
       pm->names = malloc(sizeof(char *));
+      pm->tails = malloc(sizeof(struct mem_block *));
       pm->names[0] = NULL;
     }
     if (pm->pools_nb <= pool_id) {
       pm->pools = realloc(pm->pools, sizeof(struct mem_block *) * (pool_id + 1));
       pm->names = realloc(pm->names, sizeof(char *) * (pool_id + 1));
+      pm->tails = realloc(pm->tails, sizeof(struct mem_block *) * (pool_id + 1));
 
       for (size_t i = pm->pools_nb; i <= pool_id; i++) {
         pm->pools[i] = NULL;
         pm->names[i] = NULL;
+        pm->tails[i] = NULL;
       }
 
       pm->pools_nb = pool_id + 1;
@@ -81,13 +77,20 @@ void *mem_id(size_t size, size_t pool_id) {
       pm->pools[pool_id]->data = malloc(size);
       pm->pools[pool_id]->next = NULL;
       pm->pools[pool_id]->data_size = size;
+      pm->tails[pool_id] = pm->pools[pool_id];
       return pm->pools[pool_id]->data;
     } else {
       struct mem_block *blk = malloc(sizeof(struct mem_block));
       blk->data = malloc(size);
       blk->next = NULL;
       blk->data_size = size;
-      pm->pools[pool_id] = add_to(pm->pools[pool_id], blk);
+      if (pm->pools[pool_id] == NULL) {
+        pm->pools[pool_id] = blk;
+        pm->tails[pool_id] = blk;
+      } else {
+        pm->tails[pool_id]->next = blk;
+        pm->tails[pool_id] = blk;
+      }
       return blk->data;
     }
   }
@@ -104,6 +107,7 @@ void *mem_name(size_t size, const char *pool_name) {
       pm->pools = malloc(sizeof(struct mem_block *));
       pm->names = malloc(sizeof(char *));
       pm->names[0] = NULL;
+      pm->tails = malloc(sizeof(struct mem_block *));
     }
 
     // Search in current pools if name match
@@ -115,7 +119,8 @@ void *mem_name(size_t size, const char *pool_name) {
         blk->data = malloc(size);
         blk->data_size = size;
         blk->next = NULL;
-        pm->pools[pool_id] = add_to(pm->pools[pool_id], blk);
+        pm->tails[pool_id]->next = blk;
+        pm->tails[pool_id] = blk;
         return blk->data;
       }
       // Take place of a freed pool if found one
@@ -132,7 +137,13 @@ void *mem_name(size_t size, const char *pool_name) {
         blk->data = malloc(size);
         blk->data_size = size;
         blk->next = NULL;
-        pm->pools[pool_id] = add_to(pm->pools[pool_id], blk);
+        if (pm->pools[pool_id] == NULL) {
+          pm->pools[pool_id] = blk;
+          pm->tails[pool_id] = blk;
+        } else {
+          pm->tails[pool_id]->next = blk;
+          pm->tails[pool_id] = blk;
+        }
         return blk->data;
       }
     }
@@ -141,10 +152,12 @@ void *mem_name(size_t size, const char *pool_name) {
     if (pm->pools_nb <= pool_id) {
       pm->pools = realloc(pm->pools, sizeof(struct mem_block *) * (pool_id + 1));
       pm->names = realloc(pm->names, sizeof(char *) * (pool_id + 1));
+      pm->tails = realloc(pm->tails, sizeof(struct mem_block *) * (pool_id + 1));
 
       for (size_t i = pm->pools_nb; i <= pool_id; i++) {
         pm->pools[i] = NULL;
         pm->names[i] = NULL;
+        pm->tails[i] = NULL;
       }
 
       // Set Name
@@ -159,6 +172,7 @@ void *mem_name(size_t size, const char *pool_name) {
       pm->pools[pool_id]->data_size = size;
       pm->pools[pool_id]->next = NULL;
       pm->names[pool_id] = new_pool_name;
+      pm->tails[pool_id] = pm->pools[pool_id];
       return pm->pools[pool_id]->data;
     }
   }
@@ -187,6 +201,7 @@ void free_pool() {
   if (pm->pools_nb >= 1 && pm->pools[0] != NULL) {
     rm_list_block(pm->pools[0]);
     pm->pools[0] = NULL;
+    pm->tails[0] = NULL;
   }
 
 }
@@ -196,6 +211,7 @@ void free_id(size_t pool) {
   if (pm->pools_nb >= pool && pm->pools[pool] != NULL) {
     rm_list_block(pm->pools[pool]);
     pm->pools[pool] = NULL;
+    pm->tails[pool] = NULL;
     // if the id pool had also a name
     if (pm->names[pool] != NULL)
       free(pm->names[pool]);
@@ -214,6 +230,7 @@ void free_name(const char *pool_name) {
       rm_list_block(pm->pools[pool_id]);
       free(pm->names[pool_id]);
       pm->pools[pool_id] = NULL;
+      pm->tails[pool_id] = NULL;
       pm->names[pool_id] = NULL;
       return;
     }
@@ -226,7 +243,10 @@ void free_pool_all() {
   for (; pool_id < pm->pools_nb; pool_id++) {
     if (pm->pools[pool_id] != NULL) {
       rm_list_block(pm->pools[pool_id]);
+      /* Useless because global free anyway
       pm->pools[pool_id] = NULL;
+      pm->tails[pool_id] = NULL;
+      */
     }
   }
   for (size_t i = 0; i < pm->pools_nb; i++) {
