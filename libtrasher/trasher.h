@@ -14,6 +14,7 @@ struct pool_manager {
   size_t pools_nb;
   struct mem_block **pools;
   char **names;
+  struct mem_block **tails; // Get to last block of a pool to enhance speed of block creation
 };
 
 struct mem_block {

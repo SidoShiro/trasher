@@ -8,6 +8,7 @@ struct pool_manager *get_pool_manager(char reset) {
     manager->pools_nb = 0;
     manager->pools = NULL;
     manager->names = NULL;
+    manager->tails = NULL;
   }
   if (reset) {
     // Call in a free all function
@@ -41,13 +42,17 @@ void *mem(size_t size) {
       pm->pools[0]->data_size = size;
       pm->names = malloc(sizeof(char *));
       pm->names[0] = NULL;
+      pm->tails = malloc(sizeof(struct mem_block *));
+      pm->tails[0] = pm->pools[0];
       return pm->pools[0]->data;
     } else {
       struct mem_block *blk = malloc(sizeof(struct mem_block));
       blk->data = malloc(size);
       blk->next = NULL;
       blk->data_size = size;
-      pm->pools[0] = add_to(pm->pools[0], blk);
+      pm->tails[0]->next = blk;
+      pm->tails[0] = blk;
+      // pm->pools[0] = add_to(pm->pools[0], blk);
       return blk->data;
     }
   }
@@ -232,6 +237,7 @@ void free_pool_all() {
   free(pm->pools);
   pm->pools = NULL;
   pm->pools_nb = 0;
+  free(pm->tails); // just free tail array
   free(pm);
   get_pool_manager(1);
   pm = NULL;
