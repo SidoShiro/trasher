@@ -18,6 +18,7 @@ TEST_SRC_MEM = test/test_mem_valgrind.c
 TEST_SRC_MIX = test/test_mem_mix_pools_names_ids.c
 TEST_SRC_UNIT = test/test_mem_unit_test.c
 TEST_SRC_FREE_5X = test/test_free_x5.c
+TEST_SRC_PERF = test/test_speed_perf.c
 TEST_BIN_OK = bin_test_mem_ok
 TEST_BIN_KO = bin_test_mem_ko
 TEST_BIN_SIMPLE = bin_test_mem_simple
@@ -25,6 +26,7 @@ TEST_BIN_MEM = bin_test_mem_valgrind
 TEST_BIN_MIX = bin_test_mem_mix
 TEST_BIN_UNIT = bin_test_unit
 TEST_BIN_FREE_5X = bin_test_free_5x
+TEST_BIN_PERF = bin_test_perf
 
 .PHONY: all
 
@@ -97,6 +99,11 @@ test_free_5x: lib_debug
 	cp libtrasher/trasher.h test/
 	$(CC) $(CDEBUGFLAGS) -g $(TEST_SRC_FREE_5X) -o $(TEST_BIN_FREE_5X) $(LDFLAGS)
 	./${TEST_BIN_FREE_5X}
+
+test_perf: lib
+	cp libtrasher/trasher.h test/
+	$(CC) $(CFLAGS) -g $(TEST_SRC_PERF) -o $(TEST_BIN_PERF) $(LDFLAGS)
+	./${TEST_BIN_PERF}
 
 clean:
 	rm -f ${LIB} trasher.o ${TEST_BIN_KO} ${TEST_BIN_OK} ${TEST_BIN_SIMPLE} ${TEST_BIN_UNIT} ${TEST_BIN_MIX} ${TEST_BIN_FREE_5X} ${TEST_BIN_MEM}
