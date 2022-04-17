@@ -125,6 +125,14 @@ The pool status will be:
 
 > Pool 0 has no name, it's reserved for the mem() and free_pool() functions | and mem_id(XXX, 0)
 
+### Performances
+
+* **v1.0**
+  ```
+  Average time for     malloc lib : 0.000564
+  Average time for    trasher lib : 0.010310
+  ```
+
 ### TODO
 
 * Realloc (wrapper ?)
