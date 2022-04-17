@@ -2,6 +2,8 @@
 
 Trasher is a C memory pool tool.
 
+![Trasher Logo](doc/trasher_logo.png)
+
 # Usefulness 
 
 Allocate, use, free easily.
@@ -37,6 +39,22 @@ gcc  test.c -L/path/to/lib/lib -ltrasher
 gcc test.c -L. -ltrasher
 ```
 
+### Basic in code (usage)
+
+1. Allocate simple pool
+   `void* = mem(size_t bytes)`
+2. Allocate id pool 
+   `void* = mem_id(size_t bytes)`
+3. Allocate name pool
+   `void* = mem_name(size_t bytes, char *pool_name)`
+4. Free a pool, default pool, any id pool or any name pool
+   `free_pool()`, `free_id(size_t id)`, `free_name(char *pool_name)`
+5. Final Free at end of the program
+   `free_pool_all()`
+
+### Advanced
+
+* Rename pool `pool_rename(char *original_name, char *new_name)`
 
 ## Tests
 
