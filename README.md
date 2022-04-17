@@ -127,6 +127,12 @@ The pool status will be:
 
 ### Performances
 
+* **v1.1** (use of tails block)
+  ```
+  Average time for     malloc lib : 0.000564
+  Average time for    trasher lib : 0.000259
+  ```
+
 * **v1.0**
   ```
   Average time for     malloc lib : 0.000564
@@ -136,5 +142,3 @@ The pool status will be:
 ### TODO
 
 * Realloc (wrapper ?)
-* Performances
-
