@@ -145,7 +145,7 @@ The pool status will be:
 
 ### Performances
 
-* **v1.1** (use of tails block)
+* **v1.1** (use of tail blocks)
   ```
   Average time for     malloc lib : 0.000564
   Average time for    trasher lib : 0.000259
