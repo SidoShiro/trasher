@@ -16,7 +16,19 @@ jobs:
     
     - name: Make
       run: make
-      
+
+  tests:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Make
+      run: make
+
+    - name: Tests (except CUnit test's)
+      run: make test_all_except_cunit_tests
+
 #  test:
 #    runs-on: ubuntu-latest
 #    

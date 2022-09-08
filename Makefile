@@ -7,7 +7,8 @@ SRC = libtrasher/trasher.c
 
 # -static
 CFLAGS = -Wall -Wextra
-LDFLAGS = -L. -ltrasher -lcunit
+LDFLAGS = -L. -ltrasher
+LDFLAGS_CUNIT = -L. -ltrasher -lcunit
 CDEBUGFLAGS = -Wall -Wextra -g
 CDEBUGFLAGSFSANITIZE = -Wall -Wextra -g -fsanitize=address
 
@@ -55,6 +56,9 @@ lib_debug_fsanitize: clean
 
 test: lib_debug test_ok test_simple test_mix_pools_names_ids test_memcheck_ok_fsanitize test_memcheck_ok_valgrind test_unit clean
 
+test_all_except_cunit_tests: lib_debug test_ok test_simple test_mix_pools_names_ids test_memcheck_ok_fsanitize test_memcheck_ok_valgrind clean
+
+
 test_ko: lib_debug
 	cp libtrasher/trasher.h test/
 	$(CC) $(CDEBUGFLAGS) -g ${TEST_SRC_KO} -o ${TEST_BIN_KO} $(LDFLAGS)
@@ -85,10 +89,10 @@ test_memcheck_ok_valgrind: lib_debug
 	$(CC) $(CDEBUGFLAGSFSANITIZE) -g ${TEST_SRC_MEM} -o ${TEST_BIN_MEM} $(LDFLAGS)
 	valgrind -s --track-origins=yes --leak-check=full ./${TEST_BIN_MEM}
 
-
+# Requires CUNIT lib installed
 test_unit: lib_debug
 	cp libtrasher/trasher.h test/
-	$(CC) $(CDEBUGFLAGS) -g $(TEST_SRC_UNIT) -o $(TEST_BIN_UNIT) $(LDFLAGS)
+	$(CC) $(CDEBUGFLAGS) -g $(TEST_SRC_UNIT) -o $(TEST_BIN_UNIT) $(LDFLAGS_CUNIT)
 	./$(TEST_BIN_UNIT)
 
 test_unit_verbose: lib_debug
