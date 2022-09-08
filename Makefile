@@ -29,7 +29,8 @@ TEST_BIN_FREE_5X = bin_test_free_5x
 TEST_BIN_PERF = bin_test_perf
 
 .PHONY: all
-
+.PHONY: clean
+.PHONY: lib
 
 all: lib
 
@@ -81,7 +82,7 @@ test_memcheck_ok_fsanitize: lib_debug_fsanitize
 
 test_memcheck_ok_valgrind: lib_debug
 	cp libtrasher/trasher.h test/
-	$(CC) $(CDEBUGFLAGS) -g ${TEST_SRC_MEM} -o ${TEST_BIN_MEM} $(LDFLAGS)
+	$(CC) $(CDEBUGFLAGSFSANITIZE) -g ${TEST_SRC_MEM} -o ${TEST_BIN_MEM} $(LDFLAGS)
 	valgrind -s --track-origins=yes --leak-check=full ./${TEST_BIN_MEM}
 
 
