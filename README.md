@@ -69,19 +69,21 @@ make test_ok
 make test_ko
 ```
 
-# Logic - Concept
+## Logic - Concept
 
-* Auto-create pools to store requested memory allocated blocks
-* Multiple pools
-* Allow create blocks in a specific pool:
-  * Using an id
-  * Using a string (char*) : a tag
-* Free all pools
-* Free a specific pool (by id or by tag)
-* Unspecified tag when pool is created, result to a NULL for the pool tag
+Trasher is a memory pool tool for C programs. It allows you to:
 
-> This current version of trasher is a mashup of my from-scratch pools used during my studies, many different ways to do
-> were coded, I wanted to re-organize the ideas, into one project
+* Allocate memory in a simple and efficient way, using the minimal required resources.
+* Avoid memory leaks by releasing used memory effectively.
+* Easily clean up allocated memory using Trasher's release functions.
+
+Trasher is very compact and lightweight, it saves time and ensures leak-free C programs.
+
+It is possible to allocate memory in specific pools and release them easily.
+
+Trasher works by automatically creating pools to store allocated memory blocks. It allows for the creation of multiple pools, as well as blocks in a specific pool using an ID or a name (string). It is also possible to release all pools, a specific pool (by ID or name), or all allocated memory using the final release function. If no name is specified when creating a pool, it will be assigned to NULL.
+
+> This current version of Trasher is a compilation of the memory pool tools I developed from scratch during my studies. It includes many different approaches and techniques that I wanted to organize and bring together in one project.
 
 ## Trasher - Doc
 
