@@ -1,5 +1,7 @@
 # Trasher
 
+[![Makefile CI](https://github.com/SidoShiro/trasher/actions/workflows/makefile.yml/badge.svg)](https://github.com/SidoShiro/trasher/actions/workflows/makefile.yml)
+
 Trasher is a C memory pool tool.
 
 ![Trasher Logo](doc/trasher_logo.png)
