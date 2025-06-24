@@ -1,15 +1,22 @@
 #include "trasher.h"
 
+// Power Printing macro to make pretty tests
+#ifdef SUPPRESS_PRINT
+#define POOL_STATUS() ((void)0)
+#else
+#define POOL_STATUS() pool_status()
+#endif
+
 int main() {
   // Test multiple free
-  pool_status();
+  POOL_STATUS();
   free_pool_all();
-  pool_status();
+  POOL_STATUS();
   free_pool_all();
-  pool_status();
+  POOL_STATUS();
   free_pool_all();
   mem(100);
-  pool_status();
+  POOL_STATUS();
   free_pool_all();
-  pool_status();
+  POOL_STATUS();
 }

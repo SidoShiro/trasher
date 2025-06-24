@@ -3,6 +3,13 @@
 
 #include "trasher.h"
 
+// Power Printing macro to make pretty tests
+#ifdef SUPPRESS_PRINT
+#define PRINT(fmt, ...) ((void)0)
+#else
+#define PRINT(fmt, ...) printf(fmt, ##__VA_ARGS__)
+#endif
+
 #define BLOCKS 2000
 #define BLOCK_SIZE 1024
 
@@ -45,15 +52,15 @@ double speed_tester(const char *lib_tested, void (*function_to_test)()) {
     cpu_time_used_sum += ((double) (end - start)) / CLOCKS_PER_SEC;
   }
   cpu_time_used_average = cpu_time_used_sum / i;
-  printf("Average time for %10s lib : %f\n", lib_tested, cpu_time_used_average);
+  PRINT("Average time for %10s lib : %f\n", lib_tested, cpu_time_used_average);
   return cpu_time_used_average;
 }
 
 int main() {
-  printf("Test timing and diff with malloc basic\n");
+  PRINT("Test timing and diff with malloc basic\n");
   double time_avg_malloc = speed_tester("malloc", test_malloc);
   double time_avg_trasher = speed_tester("trasher", test_trasher);
   double pourcentage = (time_avg_malloc / time_avg_trasher) * 100;
-  printf("Difference in %% : %f %% less efficient than malloc\n", pourcentage);
-  printf("End Test\n");
+  PRINT("Difference in %% : %f %% less efficient than malloc\n", pourcentage);
+  PRINT("End Test\n");
 }

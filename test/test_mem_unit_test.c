@@ -3,6 +3,13 @@
 #include <CUnit/Basic.h>
 #include "trasher.h"
 
+// Power Printing macro to make pretty tests
+#ifdef SUPPRESS_PRINT
+#define POOL_STATUS() ((void)0)
+#else
+#define POOL_STATUS() pool_status()
+#endif
+
 // Init Suite
 int init_unit_test_suite() {
   // Open, init,vars or file used by tests
@@ -19,7 +26,7 @@ void print_pools();
 
 #ifdef SHOW_POOLS_STATUS
 void print_pools() {
-  pool_status();
+  POOL_STATUS();
 }
 #endif
 #ifndef SHOW_POOLS_STATUS
@@ -122,11 +129,11 @@ void testPoolNameBehaviour() {
   mem_name(2, "HOMES");
   mem_name(84, "HOMES");
   CU_ASSERT_NOT_EQUAL(pool_give_id_from_name("HOMES"), 0);
-  // pool_status_debug();
+  // POOL_STATUS_debug();
   CU_ASSERT_EQUAL(pool_give_id_from_name("HOMES"), 1);
   CU_ASSERT_EQUAL(pool_give_number_blocks(0), 0);
   CU_ASSERT_EQUAL(pool_give_number_blocks(1), 3);
-  // pool_status_debug();
+  // POOL_STATUS_debug();
   free_pool_all();
 }
 
