@@ -32,17 +32,3 @@ jobs:
     - name: Tests (except CUnit test's)
       run: make test_all_except_cunit_tests
 
-#  test:
-#    runs-on: ubuntu-latest
-#    
-#    steps:
-#    - uses: actions/checkout@v3
-#    
-#    - name: Cunit
-#      run: git clone https://github.com/wpdk/CUnit ; cd CUnit ; make
-#      
-#    - name: Run tests ok
-#      run: make test_ok
-#      
-#    - name: Run all tests
-#      run: make test
