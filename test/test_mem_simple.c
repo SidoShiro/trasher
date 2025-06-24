@@ -1,6 +1,13 @@
 #include <stdio.h>
 #include "trasher.h"
 
+// Power Printing macro to make pretty tests
+#ifdef SUPPRESS_PRINT
+#define POOL_STATUS() ((void)0)
+#else
+#define POOL_STATUS() pool_status()
+#endif
+
 int main() {
   size_t buffer_size = 10;
   char* buffer = mem(buffer_size);
@@ -14,7 +21,7 @@ int main() {
 
   mem(50);
 
-  pool_status();
+  POOL_STATUS();
 
   free_pool_all();
   return 0;

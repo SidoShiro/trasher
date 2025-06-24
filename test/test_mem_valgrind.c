@@ -1,17 +1,25 @@
 #include <stdio.h>
 #include "trasher.h"
 
-int main() {
+// Power Printing macro to make pretty tests
+#ifdef SUPPRESS_PRINT
+#define PRINT(fmt, ...) ((void)0)
+#define POOL_STATUS() ((void)0)
+#else
+#define PRINT(fmt, ...) printf(fmt, ##__VA_ARGS__)
+#define POOL_STATUS() pool_status()
+#endif
 
+int main() {
   unsigned sizes_len = 0;
   const int sizes[] = { 1, 16, 32, 64, 128, 512, 1024, 1024, 1024, 1024, 2048, 2048, 16384, 20000, 65536, 0 };
   while (sizes[sizes_len++] != 0) {}
 
   mem(42);
 
-  pool_status();
+  POOL_STATUS();
 
-  printf("Generate Mo of data into multiple pools\n");
+  PRINT("Generate Mo of data into multiple pools\n");
 
   const char* names[] = { "CARS", "PLANES", "BIKES", "BOATS", NULL };
   
@@ -21,16 +29,16 @@ int main() {
     }
   }
 
-  printf("Filled pools...\n");
+  PRINT("Filled pools...\n");
 
-  pool_status();
+  POOL_STATUS();
 
-  printf("Free all\n");
+  PRINT("Free all\n");
   free_pool_all(); // Should close all pool functions for memory safety
-  printf("Second free should do no effects\n");
+  PRINT("Second free should do no effects\n");
   free_pool_all(); // Should close all pool functions for memory safety
 
-  printf("Generate Mo of data into multiple pools... 2nd phase\n");
+  PRINT("Generate Mo of data into multiple pools... 2nd phase\n");
 
   const char* names_2nd[] = { "HOMES", "COMPANIES", "STOCKS", "TABLES", "PENS", "SYSTEMS", "WEBS", NULL };
   const int sizes_2nd[] = { 16, 1024, 1024, 2048, 2048, 16384, 200, 200, 200, 200, 200, 636, 0 };
@@ -49,7 +57,7 @@ int main() {
 
   free_pool();
 
-  pool_status();
+  POOL_STATUS();
 
   free_id(5);
   free_id(5);
@@ -58,5 +66,5 @@ int main() {
 
   free_pool_all(); // Should close all pool functions for memory safety
 
-  printf("End Test\n");
+  PRINT("End Test\n");
 }

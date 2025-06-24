@@ -1,8 +1,18 @@
 #include <stdio.h>
 #include "trasher.h"
 
+// Power Printing macro to make pretty tests
+#ifdef SUPPRESS_PRINT
+#define PRINT(fmt, ...) ((void)0)
+#define POOL_STATUS() ((void)0)
+#else
+#define PRINT(fmt, ...) printf(fmt, ##__VA_ARGS__)
+#define POOL_STATUS() pool_status()
+#endif
+
+
 int main() {
-  printf("Hello World!\n\n");
+  PRINT("Hello World!\n\n");
 
   size_t buffer_size = 10000;
   char* buffer = mem(buffer_size);
@@ -13,7 +23,7 @@ int main() {
     j++;
   }
 
-  // printf("%s\n", buffer);
+  // PRINT("%s\n", buffer);
 
   int* array_IDS = mem_id(33, 5);
 
@@ -22,12 +32,12 @@ int main() {
   array_IDS[4] = 25;
   array_ids_2[3] = 232;
 
-  printf("%d\n", array_ids_2[3]);
+  PRINT("%d\n", array_ids_2[3]);
 
   free_id(2);
 
-  printf("array_IDS access : %d\n", array_IDS[4]);
-  printf("array_ids_2 : %d", array_ids_2[3]); // Memcheck Valgrind shoudl notify invalid read!
+  PRINT("array_IDS access : %d\n", array_IDS[4]);
+  PRINT("array_ids_2 : %d", array_ids_2[3]); // Memcheck Valgrind shoudl notify invalid read!
 
   // Named Pools : Tag
   int *speed_array = mem_name(20, "cars");
@@ -41,7 +51,7 @@ int main() {
 
   free_name("cars");
 
-  pool_status();
+  POOL_STATUS();
 
 
   free_name("cars");
