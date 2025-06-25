@@ -4,11 +4,14 @@
 CC = gcc
 LIB = libtrasher.a
 SRC = libtrasher/trasher.c
+LIB_SHARED = libtrasher.so
 
 # -static
 CFLAGS = -Wall -Wextra
+CFLAGS_SHARED = -Wall -Wextra -fPIC
 LDFLAGS = -L. -ltrasher
 LDFLAGS_CUNIT = -L. -ltrasher -lcunit
+LDFLAGS_SHARED = -shared
 CDEBUGFLAGS = -O0 -Wall -Wextra -g
 CDEBUGFLAGSFSANITIZE = -O0 -Wall -Wextra -g -fsanitize=address
 
@@ -33,7 +36,7 @@ TEST_BIN_PERF = bin_test_perf
 .PHONY: clean
 .PHONY: lib
 
-all: lib
+all: lib lib_shared
 
 #	ar -rcs ${LIB} libtrasher.o
 
@@ -41,6 +44,9 @@ lib: clean
 	${CC} -c ${SRC} ${CFLAGS} -o trasher.o
 	ar -rc ${LIB} trasher.o
 	rm trasher.o
+
+lib_shared: clean
+	${CC} -c ${SRC} ${CFLAGS_SHARED} ${LDFLAGS_SHARED} -o ${LIB_SHARED}
 
 lib_debug: clean 
 	${CC} -c ${SRC} ${CDEBUGFLAGS} -o trasher.o
@@ -114,5 +120,5 @@ test_perf: lib
 	./${TEST_BIN_PERF}
 
 clean:
-	rm -f ${LIB} trasher.o ${TEST_BIN_KO} ${TEST_BIN_OK} ${TEST_BIN_SIMPLE} ${TEST_BIN_UNIT} ${TEST_BIN_MIX} ${TEST_BIN_FREE_5X} ${TEST_BIN_MEM}
+	rm -f ${LIB} ${LIB_SHARED} trasher.o ${TEST_BIN_KO} ${TEST_BIN_OK} ${TEST_BIN_SIMPLE} ${TEST_BIN_UNIT} ${TEST_BIN_MIX} ${TEST_BIN_FREE_5X} ${TEST_BIN_MEM} ${TEST_BIN_PERF}
 

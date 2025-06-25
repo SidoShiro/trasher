@@ -18,6 +18,7 @@ jobs:
         make
         mkdir -p release
         cp libtrasher.a release/
+        cp libtrasher.so release/
 
     - name: Create a GitHub Release
       id: create_release
@@ -30,7 +31,7 @@ jobs:
         draft: false
         prerelease: false
 
-    - name: Upload Release Asset
+    - name: Upload Static Lib
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -39,4 +40,14 @@ jobs:
         asset_path: ./release/libtrasher.a
         asset_name: libtrasher.a
         asset_content_type: application/x-archive
+
+    - name: Upload Shared Lib
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./release/libtrasher.so
+        asset_name: libtrasher.so
+        asset_content_type: application/x-sharedlib
 
