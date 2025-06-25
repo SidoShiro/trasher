@@ -4,15 +4,26 @@ on:
   push:
     tags:
       - 'v*'
-    branches:
-      - master
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    
     steps:
     - uses: actions/checkout@v3
+    - name: Check tag points to master
+      id: check_branch
+      run: |
+        commit_sha=$(git rev-parse HEAD)
+        main_sha=$(git rev-parse origin/master)
+        echo "tag_commit=$commit_sha" >> $GITHUB_OUTPUT
+        echo "master_commit=$main_sha" >> $GITHUB_OUTPUT
+      continue-on-error: false
+
+    - name: Abort if tag is not on master
+      if: steps.check_branch.outputs.tag_commit != steps.check_branch.outputs.master_commit
+      run: |
+        exit 0
+    
     - name: Make
       run: |
         make
