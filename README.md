@@ -58,16 +58,27 @@ gcc test.c -L. -ltrasher
 
 * Rename pool `pool_rename(char *original_name, char *new_name)`
 
+## Robustness & Safety
+
+This version includes several safety enhancements:
+* **NULL-safe API:** All functions check for NULL inputs and uninitialized pool managers.
+* **OOM Protection:** Every `malloc` and `realloc` is verified; functions return `NULL` or error codes if memory is exhausted.
+* **String Safety:** Pool names are managed using `strdup` and `free` to prevent buffer overflows and ensure memory isolation.
+* **Const Correctness:** Public APIs use `const` where appropriate to prevent accidental string modification.
+
 ## Tests
 
 ```sh
-# all tests
+# all tests (requires CUnit and Valgrind)
 make test
+
+# run robustness suite (no external deps)
+make test_robustness
 
 # Should run smoothly
 make test_ok
 
-# Should crash : core dumped (double free) 
+# Should crash : core dumped (intended behavior for showing unsafe usage)
 make test_ko
 ```
 
@@ -101,17 +112,17 @@ Trasher works by automatically creating pools to store allocated memory blocks. 
 | `free_name` | Free the pool with pool_name as name | pool_name (const char \*) : the pool name | - |
 | `free_pool_all` | Remove all pools, reset pool_manager | - | - |
 | `pool_status` | Get printed view of the pools, used mainly for debug | - | (many prints) |
-| `pool_give_number_blocks` | Give number of allocated blocks in a pool | - | - |
+| `pool_give_number_blocks` | Give number of allocated blocks in a pool | id (size_t) | (ssize_t) : number of blocks, -1 if manager NULL, -2 if id out of bounds |
 | `pool_give_name_from_id` | Retrieve name of a pool from id of pool, NULL if error/not found | id (size_t) | name (char \*) |
-| `pool_give_id_from_name` | Retrieve id of a pool using the name of the pool, return -1 if not found or error | name (char \*) | id (ssize_t) |
-| `pool_rename` | Rename a pool name to a new name | char \* source_name, char \* new_name | int |
+| `pool_give_id_from_name` | Retrieve id of a pool using the name of the pool, return -1 if not found or error | name (const char \*) | id (ssize_t) |
+| `pool_rename` | Rename a pool name to a new name | const char \* source_name, const char \* new_name | int : 1 success, 0 not found, -1 error/OOM |
 
 
 * Dev Level Lib Functions
 
 | Function | Desc. | Args. | Return |
 |----------|-------|-------|--------|
-| `get_pool_manger` | Get the struct which manage the pools and the pools names | - | (struct pool_manager \*) | 
+| `get_pool_manger` | Get the struct which manage the pools and the pools names | char reset : 1 to clear static manager | (struct pool_manager \*) | 
 | `pool_status_debug` | Get printed view of the pools, used mainly for debug, on stderr | - | (many prints) |
 
 
